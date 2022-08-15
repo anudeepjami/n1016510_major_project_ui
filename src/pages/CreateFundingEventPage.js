@@ -14,6 +14,7 @@ function CreateFundingEventPage() {
   });
   const [popup, setPopup] = useState(false);
   const [message, setMessage] = useState("");
+  const [buttonStatus, setButtonStatus] = useState(false);
 
   var ChangeField = async (event) => {
     let temp = {
@@ -39,6 +40,7 @@ function CreateFundingEventPage() {
   }
 
   var CreateCrowdfundingEvent = async () => {
+    setButtonStatus(true);
     const accounts = await web3.eth.getAccounts();
     try {
       setMessage("Contract creation in progress .... !!!!");
@@ -53,6 +55,7 @@ function CreateFundingEventPage() {
     catch (error) {
       error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
     }
+    setButtonStatus(false);
   }
 
   var PopupHandler = async () => {
@@ -76,7 +79,7 @@ function CreateFundingEventPage() {
             <Form.Label>Minimum amount of Ether required to enter : (Enter value in Ether)</Form.Label>
             <Form.Control id='3' type="number" min="0.00001" value={crowdfundingEvents.min_deposit} onClick={ChangeField} onChange={ChangeField} />
           </Form.Group>
-          <Button variant="primary" type="submit" onClick={CreateCrowdfundingEvent}>
+          <Button variant="primary" type="submit" disabled={buttonStatus} onClick={CreateCrowdfundingEvent}>
             Create
           </Button>
         </Form>

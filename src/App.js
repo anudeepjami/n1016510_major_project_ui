@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import HomePage from './pages/HomePage';
 import CreateFundingEventPage from './pages/CreateFundingEventPage';
+import CrowdfundingEventPage from './pages/CrowdfundingEventPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/create' element={<CreateFundingEventPage />} />
+          <Route path='/event' element={< CrowdfundingEventPage/>} />
         </Routes>
       </Router>
     </div>
