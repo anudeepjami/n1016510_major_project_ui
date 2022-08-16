@@ -24,7 +24,7 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm run build
+          CI=false npm run build
           
       - name: Zip Release
         uses: TheDoctor0/zip-release@0.6.1
