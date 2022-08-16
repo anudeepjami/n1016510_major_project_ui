@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import maincontract from '../components/ethereum_connectors/maincontract';
+import maincontract from '../components/ethereum_connectors/MainContract.js';
 import { Card } from 'react-bootstrap';
 import web3 from 'web3';
 import {useCookies} from 'react-cookie'
@@ -20,9 +20,9 @@ function HomePage() {
     })();
   }, []);
 
-  var LoadEventPage = async (item) => {
+  var LoadFundingPage = async (item) => {
     setCookie('EventAddress', item.crowdfunding_event_address, { path: '/' });
-    window.location.href = "/event";
+    window.location.href = "/fund";
   }
 
   return (
@@ -33,7 +33,10 @@ function HomePage() {
         {crowdfundingEvents.map((item, index) => {
           return (
             <div key={index}>
-              <Card className="text-center" onClick={()=> LoadEventPage(item)}>
+              <Card 
+              className="text-center" 
+              style={{cursor: 'pointer'}}
+              onClick={()=> LoadFundingPage(item)}>
                 <Card.Header> Block Chain Address of crowdfunding event: {item.crowdfunding_event_address}</Card.Header>
                 <Card.Body>
                   <Card.Title className="text-muted">{item.crowdfunding_event_title}</Card.Title>
