@@ -9,7 +9,7 @@ const crowdfundingEventsContract = {
 const default_instance = new web3.eth
     .Contract(
         crowdfundingEventsContract.interface, 
-        '0x11CD56ED8E7Fd01931F932444CEECcaAF6Fb9Fd8', 
+        '0xcAD4ad9fe53aA0575A1411410DA0B5B323a00CE3', 
         {handleRevert: true}
     );
 

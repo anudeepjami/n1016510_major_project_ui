@@ -50,7 +50,7 @@ function CreateFundingEventPage() {
         .send({
           from: accounts[0]
         });
-      setMessage(" Crowdfunding event created successfully \n" + "block hash : " + temp.blockHash);
+      setMessage(" Crowdfunding event created successfully ...... !!!!" + "block hash : " + temp.blockHash);
     }
     catch (error) {
       error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
