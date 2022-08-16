@@ -65,14 +65,13 @@ function FundingPage() {
 
     var ContributeFunds = async () => {
         setCreateVotingEventButtonStatus(true);
-        const accounts = await web3.eth.getAccounts();
         try {
             setMessage("Voting event creation in progress .... !!!!");
             setPopup(true);
             const temp = await fundingcontract.methods
                 .DepositToCrowdfundingEvent()
                 .send({
-                    from: accounts[0], value: Web3.utils.toWei(depositAmount, 'ether')
+                    from: cookies.MetamaskLoggedInAddress, value: Web3.utils.toWei(depositAmount, 'ether')
                 });
             setMessage("Voting event creation success...... !!!!" + "block hash : " + temp.blockHash);
         }
@@ -85,14 +84,13 @@ function FundingPage() {
 
     var CreateVotingEvent = async () => {
         setContributeButtonStatus(true);
-        const accounts = await web3.eth.getAccounts();
         try {
             setMessage("User contribution in progress .... !!!!");
             setPopup(true);
             const temp = await fundingcontract.methods
                 .CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
                 .send({
-                    from: accounts[0]
+                    from: cookies.MetamaskLoggedInAddress
                 });
             setMessage("User contribution success...... !!!!" + "block hash : " + temp.blockHash);
         }
@@ -124,167 +122,187 @@ function FundingPage() {
                     </Card.Body>
                 </Card>
                 <br />
-                <Card>
-                    <Card.Header as="h4">Fund Minimum Contribution</Card.Header>
-                    <Card.Body>
-                        <Card.Title>{web3.utils.fromWei(fundDetails[3] == undefined ? '0' : fundDetails[3].toString(), 'ether') + " eth"}</Card.Title>
-                        <Card.Text>
-                            Deposits should be made equal to or in multiples of the minimum set for this fund.
-                            <br /><br />
-                            <Button variant="primary" type="submit" onClick={() => { setViewContributeButton(!viewContributeButton) }}>
-                                {!viewContributeButton ? 'Contribute' : 'Hide Contribution Form'}</Button>
-                            <br /><br />
-                            {viewContributeButton ? <>
-                                <InputGroup className="mb-3">
-                                    <Button variant="primary" type="submit" disabled={contributeButtonStatus} onClick={ContributeFunds}>Contribute</Button>
-                                    <Form.Control
-                                        placeholder="Enter Contribution in ether"
-                                        aria-describedby="basic-addon2"
-                                        onChange={(event) => setDepositAmount(event.target.value)}
-                                        type="number"
-                                    />
-                                    <InputGroup.Text>ether</InputGroup.Text>
-                                </InputGroup>
-                            </> : <></>}
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-                <br />
-                <Card>
-                    <Card.Header as="h4">Fund Wallet Balance</Card.Header>
-                    <Card.Body>
-                        <Card.Title>{web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " eth"}</Card.Title>
-                        <Card.Text>
-                            This is the balance left for the fund manager to spend from the funds ethereum account.
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-                <br />
-                <Card>
-                    <Card.Header as="h4">Contributors Info</Card.Header>
-                    <Card.Body>
-                        <Card.Title>{fundDetails[4]?.length + ' contributors have ' + fundDetails[5] + ' votes.'}</Card.Title>
-                        <Card.Text>
-                            Total Number of Contributors and Votes.
-                            <br /><br />
-                            <Button variant="primary" type="submit" onClick={() => { setViewContributorsTable(!viewContributorsTable) }}>
-                                {!viewContributorsTable ? 'View' : 'Hide'} Contributors Table</Button>
-                            <br /><br />
-                            {viewContributorsTable ?
-                                <Table striped bordered hover variant="dark">
-                                    <thead>
-                                        <tr>
-                                            <th>Contributor</th>
-                                            <th>Deposit</th>
-                                            <th>Votes</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {fundDetails[4]?.map((item, index) => {
-                                            return (
-                                                <tr key={index}>
-                                                    <td>{item.contributor_address}</td>
-                                                    <td>{web3.utils.fromWei((item.contributor_votes * fundDetails[3]).toString(), 'ether') + " eth"}</td>
-                                                    <td>{item.contributor_votes}</td>
-                                                </tr>
-                                            )
-                                        })}
-                                    </tbody>
-                                </Table> : <></>}
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-                <br />
-                <Card>
-                    <Card.Header as="h4">Voting Events</Card.Header>
-                    <Card.Body>
-                        <Card.Title>{fundDetails[7]}</Card.Title>
-                        <Card.Text>
-                            Voting events present in this fund.
-                            <br /><br />
-                            <Button
-                                variant="primary"
-                                type="submit"
-                                onClick={() => { setViewCreateVotingEventForm(!viewCreateVotingEventForm) }}>
-                                {!viewCreateVotingEventForm ? 'Create Voting Event' : 'Hide Create Voting Event Form'}</Button>
-                            <br /><br />
-                            {viewCreateVotingEventForm ? <>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Text>Voting Event Title</InputGroup.Text>
-                                    <Form.Control
-                                        id='1'
-                                        placeholder="Enter Title"
-                                        aria-describedby="basic-addon2"
-                                        onChange={LoadVotingEventDetails}
-                                    />
-                                </InputGroup>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Text>Voting Event Description</InputGroup.Text>
-                                    <Form.Control
-                                        id='2'
-                                        placeholder="Enter Descrption"
-                                        aria-describedby="basic-addon2"
-                                        onChange={LoadVotingEventDetails}
-                                    />
-                                </InputGroup>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Text>Destination Wallet Address</InputGroup.Text>
-                                    <Form.Control
-                                        id='3'
-                                        placeholder="Enter Wallet Address"
-                                        aria-describedby="basic-addon2"
-                                        onChange={LoadVotingEventDetails}
-                                    />
-                                </InputGroup>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Text>ether</InputGroup.Text>
-                                    <Form.Control
-                                        id='4'
-                                        placeholder="Enter how much ether you want to send"
-                                        aria-describedby="basic-addon2"
-                                        onChange={LoadVotingEventDetails}
-                                        type="number"
-                                    />
-                                </InputGroup>
-                                <Button variant="primary" type="submit" disable={createVotingEventButtonStatus} onClick={CreateVotingEvent}>Create Voting Event</Button>
+                <div className='d-flex'>
+                    <Card className='m-1'>
+                        <Card.Header as="h4">Fund Minimum Contribution</Card.Header>
+                        <Card.Body>
+                            <Card.Title>{web3.utils.fromWei(fundDetails[3] == undefined ? '0' : fundDetails[3].toString(), 'ether') + " eth"}</Card.Title>
+                            <Card.Text>
+                                Deposits should be made equal to or in multiples of the minimum set for this fund.
                                 <br /><br />
-                            </> : <></>}
+                                <Button variant="primary" type="submit" onClick={() => { setViewContributeButton(!viewContributeButton) }}>
+                                    {!viewContributeButton ? 'Contribute' : 'Hide Contribution Form'}</Button>
+                                <br /><br />
+                                {viewContributeButton ? <>
+                                    <InputGroup className="mb-3">
+                                        <Button variant="primary" type="submit" disabled={contributeButtonStatus} onClick={ContributeFunds}>Contribute</Button>
+                                        <Form.Control
+                                            placeholder="Enter Contribution in ether"
+                                            aria-describedby="basic-addon2"
+                                            onChange={(event) => setDepositAmount(event.target.value)}
+                                            type="number"
+                                        />
+                                        <InputGroup.Text>ether</InputGroup.Text>
+                                    </InputGroup>
+                                </> : <></>}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card >
+                    <Card className='m-1'>
+                        <Card.Header as="h4">Fund Wallet Balance</Card.Header>
+                        <Card.Body>
+                            <Card.Title>{web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " eth"}</Card.Title>
+                            <Card.Text>
+                                This is the balance left for the fund manager to spend from the funds ethereum account.
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </div>
+                <br />
+                <div className='d-flex'>
+                    <Card className='m-1' style={{ width: '50%' }}>
+                        <Card.Header as="h4">Contributors Info</Card.Header>
+                        <Card.Body>
+                            <Card.Title>{fundDetails[4]?.length + ' contributors have ' + fundDetails[5] + ' votes.'}</Card.Title>
+                            <Card.Text>
+                                Total Number of Contributors and Votes.
+                                <br /><br />
+                                <Button 
+                                    variant="primary" 
+                                    type="submit" 
+                                    onClick={() => { 
+                                        setViewContributorsTable(!viewContributorsTable)
+                                        setViewVotingEventsTable(false)
+                                        }}>
+                                    {!viewContributorsTable ? 'View' : 'Hide'} Contributors</Button>
+                                <br /><br />
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <Card className='m-1' style={{ width: '50%' }}>
+                        <Card.Header as="h4">Voting Events</Card.Header>
+                        <Card.Body>
+                            <Card.Title>{fundDetails[7]}</Card.Title>
+                            <Card.Text>
+                                Voting events present in this fund.
+                                <br /><br />
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    onClick={() => { 
+                                        setViewCreateVotingEventForm(!viewCreateVotingEventForm) 
+                                        }}>
+                                    {!viewCreateVotingEventForm ? 'Create Voting Event' : 'Hide Create Voting Event Form'}</Button>
+                                <br /><br />
+                                {viewCreateVotingEventForm ? <>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>Voting Event Title</InputGroup.Text>
+                                        <Form.Control
+                                            id='1'
+                                            placeholder="Enter Title"
+                                            aria-describedby="basic-addon2"
+                                            onChange={LoadVotingEventDetails}
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>Voting Event Description</InputGroup.Text>
+                                        <Form.Control
+                                            id='2'
+                                            placeholder="Enter Descrption"
+                                            aria-describedby="basic-addon2"
+                                            onChange={LoadVotingEventDetails}
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>Destination Wallet Address</InputGroup.Text>
+                                        <Form.Control
+                                            id='3'
+                                            placeholder="Enter Wallet Address"
+                                            aria-describedby="basic-addon2"
+                                            onChange={LoadVotingEventDetails}
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>ether</InputGroup.Text>
+                                        <Form.Control
+                                            id='4'
+                                            placeholder="Enter how much ether you want to send"
+                                            aria-describedby="basic-addon2"
+                                            onChange={LoadVotingEventDetails}
+                                            type="number"
+                                        />
+                                    </InputGroup>
+                                    <Button variant="primary" type="submit" disabled={createVotingEventButtonStatus} onClick={CreateVotingEvent}>Create Voting Event</Button>
+                                    <br /><br />
+                                </> : <></>}
 
-                            <Button variant="primary" type="submit" onClick={() => { setViewVotingEventsTable(!viewVotingEventsTable) }}>
-                                {!viewVotingEventsTable ? '' : 'Hide'} Voting Events Table</Button>
-                            <br /><br />
-                            {viewVotingEventsTable ?
-                                <Table striped bordered hover variant="light">
-                                    <thead>
-                                        <tr>
-                                            <th>Voting Event Title</th>
-                                            <th>Destination Wallet</th>
-                                            <th>Transfer Amount</th>
-                                            <th>Voting Status</th>
+                                <Button 
+                                    variant="primary" 
+                                    type="submit" 
+                                    onClick={() => { 
+                                        setViewVotingEventsTable(!viewVotingEventsTable)
+                                        setViewContributorsTable(false)
+                                    }}>
+                                    {!viewVotingEventsTable ? 'View' : 'Hide'} Voting Events</Button>
+                                <br /><br />
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </div>
+                <div>
+                    {viewContributorsTable ?
+                        <Table striped bordered hover variant="dark">
+                            <thead>
+                                <tr>
+                                    <th>Contributor</th>
+                                    <th>Deposit</th>
+                                    <th>No of Votes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {fundDetails[4]?.map((item, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td>{item.contributor_address}</td>
+                                            <td>{web3.utils.fromWei((item.contributor_votes * fundDetails[3]).toString(), 'ether') + " eth"}</td>
+                                            <td>{item.contributor_votes}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        {votingEventDetails?.map((item, index) => {
-                                            return (
-                                                <tr key={index}
-                                                    style={{ cursor: 'pointer' }}
-                                                    onClick={() => LoadVotingPage(index)}>
-                                                    <td>{item.title}</td>
-                                                    <td>{item.destination_wallet_address}</td>
-                                                    <td>{web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
-                                                    <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
-                                                        {
-                                                            !item.event_completion_status ? 'In Progress' : item.event_success_status ? 'Successcul' : "Failed"
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })}
-                                    </tbody>
-                                </Table> : <></>}
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
+                                    )
+                                })}
+                            </tbody>
+                        </Table> : <></>}
+                </div>
+                <div>
+                    {viewVotingEventsTable ?
+                        <Table striped bordered hover variant="light">
+                            <thead>
+                                <tr>
+                                    <th>Voting Event Title</th>
+                                    <th>Destination Wallet</th>
+                                    <th>Transfer Amount</th>
+                                    <th>Voting Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {votingEventDetails?.map((item, index) => {
+                                    return (
+                                        <tr key={index}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => LoadVotingPage(index)}>
+                                            <td>{item.title}</td>
+                                            <td>{item.destination_wallet_address}</td>
+                                            <td>{web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
+                                            <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
+                                                {
+                                                    !item.event_completion_status ? 'In Progress' : item.event_success_status ? 'Successcul' : "Failed"
+                                                }
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </Table> : <></>}
+                </div>
                 <Modal
                     show={popup}
                     onHide={async () => {
@@ -304,7 +322,7 @@ function FundingPage() {
                                 <div style={{ float: "right" }}>
                                     <CountdownCircleTimer
                                         isPlaying
-                                        duration={20}
+                                        duration={30}
                                         colors={['#004777', '#F7B801', '#A30000', '#A30000']}
                                         colorsTime={[20, 15, 10, 5]}
                                         size="90">

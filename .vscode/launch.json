@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-chrome",
+            "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:8080",
@@ -14,7 +14,7 @@
         {
             "name": "SWA: Run n1016510_major_project_ui",
             "request": "launch",
-            "type": "pwa-chrome",
+            "type": "chrome",
             "url": "http://localhost:4280",
             "preLaunchTask": "swa: start n1016510_major_project_ui",
             "webRoot": "${workspaceFolder}/",

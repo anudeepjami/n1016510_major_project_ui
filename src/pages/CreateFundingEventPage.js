@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { Form, Button, Modal } from 'react-bootstrap';
 import maincontract from '../components/ethereum_connectors/MainContract.js';
 import web3 from '../components/ethereum_connectors/web3';
@@ -7,6 +8,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 function CreateFundingEventPage() {
 
+  const[cookies, setCookie] = useCookies();
   const [crowdfundingEvents, setCrowdfundingEvents] = useState({
     title: "Enter Title (cannot be empty)",
     content: "Enter some info about your funding event (cannot be empty)",
@@ -41,14 +43,13 @@ function CreateFundingEventPage() {
 
   var CreateCrowdfundingEvent = async () => {
     setButtonStatus(true);
-    const accounts = await web3.eth.getAccounts();
     try {
       setMessage("Contract creation in progress .... !!!!");
       setPopup(true);
       const temp = await maincontract.methods
         .CreateCrowdfundingEvent(crowdfundingEvents.title, crowdfundingEvents.content, Web3.utils.toWei(crowdfundingEvents.min_deposit, 'ether'))
         .send({
-          from: accounts[0]
+          from: cookies.MetamaskLoggedInAddress
         });
       setMessage(" Crowdfunding event created successfully ...... !!!!" + "block hash : " + temp.blockHash);
     }
@@ -98,7 +99,7 @@ function CreateFundingEventPage() {
               <div style={{ float: "right" }}>
                 <CountdownCircleTimer
                   isPlaying
-                  duration={20}
+                  duration={30}
                   colors={['#004777', '#F7B801', '#A30000', '#A30000']}
                   colorsTime={[20, 15, 10, 5]}
                   size="90">
