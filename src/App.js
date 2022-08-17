@@ -35,7 +35,9 @@ function App() {
           <Navbar.Brand href="/"><img width="200" height="100" src={require('./images/companylogo.png')} /></Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link style={{ color: "white" }} href="/">Home</Nav.Link>
+            <Nav.Link style={{ color: "white" }} href="/user">User</Nav.Link>
           </Nav>
+
           <Nav className="justify-content-end">
             <Nav.Link href="/create"><Button variant="primary">Create a Crowdfunding Campaign</Button></Nav.Link>
           </Nav>
