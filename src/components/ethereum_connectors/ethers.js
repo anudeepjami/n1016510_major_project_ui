@@ -4,9 +4,10 @@ var provider,signer;
  
 //checks if browser has metmask or anyother wallet configured
 if (typeof window.ethereum != "undefined") {
-//create web3 provider
+//create web3 provider with ethers
   provider = new ethers.providers.Web3Provider(window.ethereum)
-
+//connection request to ethereum wallet
+  window.ethereum.request({ method: 'eth_requestAccounts' })
 // signer for performing transactions using metamask
   signer = provider.getSigner();
 } 
