@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { FundingContract } from '../components/ethereum_connectors/FundingContract.js';
+import { FundingContractEthers } from '../components/ethereum_connectors/FundingContractEthers.js';
 import { Card, ListGroup, Button, Table, Modal } from 'react-bootstrap';
-import web3 from '../components/ethereum_connectors/web3.js';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
@@ -10,6 +10,7 @@ function VotingEventPage() {
 
     const [cookies, setCookie] = useCookies();
     const [fundingcontract, setfundingcontract] = useState(FundingContract(cookies.EventAddress));
+    const [fundingcontractethers, setfundingcontractethers] = useState(FundingContractEthers(cookies.EventAddress));
 
     const [fundDetails, setFundDetails] = useState({});
     const [votingEventDetails, setVotingEventDetails] = useState({});
@@ -57,8 +58,8 @@ function VotingEventPage() {
                     contributor_votes: element.contributor_votes
                 });
                 tempVoteDivision.yettovote = tempVoteDivision.yettovote + parseInt(element.contributor_votes);
-                if(cookies.MetamaskLoggedInAddress == element.contributor_address)
-                setVotingButton(false);
+                if (cookies.MetamaskLoggedInAddress == element.contributor_address)
+                    setVotingButton(false);
             }
             tempVoteDivision.total = tempVoteDivision.total + parseInt(element.contributor_votes);
         });
@@ -72,17 +73,15 @@ function VotingEventPage() {
         try {
             setMessage("Voting in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontract.methods
-                .VoteForVotingEvent(cookies.VotingIndex,vote)
-                .send({
-                    from: cookies.MetamaskLoggedInAddress
-                });
-            setMessage("Voted successfully...... !!!!" + "block hash : " + temp.blockHash);
+            const temp = await fundingcontractethers
+                .VoteForVotingEvent(cookies.VotingIndex, vote);
+            await temp.wait();
+            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+            setVotingButton(false);
         }
-        setVotingButton(false);
         await LoadVotingDetails();
     }
 
@@ -91,12 +90,10 @@ function VotingEventPage() {
         try {
             setMessage("Close polling in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontract.methods
-                .CompleteVotingEvent(cookies.VotingIndex)
-                .send({
-                    from: cookies.MetamaskLoggedInAddress
-                });
-            setMessage("Polling closed successfully...... !!!!" + "block hash : " + temp.blockHash);
+            const temp = await fundingcontractethers
+                .CompleteVotingEvent(cookies.VotingIndex);
+            await temp.wait();
+            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
@@ -124,14 +121,14 @@ function VotingEventPage() {
                 <Card>
                     <Card.Header>
                         <b>Voting Details</b>
-                        <Button 
-                            variant="primary" 
-                            type="submit" 
-                            disabled={pollingButton} 
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={pollingButton}
                             onClick={ClosePolling}
-                            style={{float: 'right'}}
-                            >
-                                Close Polling
+                            style={{ float: 'right' }}
+                        >
+                            Finish Voting Event
                         </Button>
                     </Card.Header>
                     <ListGroup variant="flush">
@@ -139,24 +136,24 @@ function VotingEventPage() {
                         <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}</ListGroup.Item>
                         <ListGroup.Item><b>Voting Event Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
-                                {!votingEventDetails.event_completion_status ? 'In Progress' : votingEventDetails.event_success_status ? 'Successcul' : "Failed"}
+                                {!votingEventDetails.event_completion_status ? 'In Progress' : votingEventDetails.event_success_status ? 'Successful' : "Failed"}
                             </ins>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
                             <p>
                                 <b>Vote Alignment: </b>
-                                Approved: <b style={{ color: 'green' }}>{voteDivision.approved}</b>, 
-                                Refused: <b style={{ color: 'red' }}>{voteDivision.refused}</b>, 
-                                Yet to Vote: <b style={{ color: 'blue' }}>{voteDivision.yettovote}</b>, 
+                                Approved: <b style={{ color: 'green' }}>{voteDivision.approved}</b>,
+                                Refused: <b style={{ color: 'red' }}>{voteDivision.refused}</b>,
+                                Yet to Vote: <b style={{ color: 'blue' }}>{voteDivision.yettovote}</b>,
                                 Total: <b>{voteDivision.total}</b>
                             </p>
                             <Button variant="primary" type="submit" onClick={() => { setViewContributorsVotingTable(!viewContributorsVotingTable) }}>
-                                {!viewContributorsVotingTable ? 'View' : 'Hide'} Contributors Voting Table      
+                                {!viewContributorsVotingTable ? 'View' : 'Hide'} Contributors Voting Table
                             </Button>&nbsp;
-                            <span style={{float: 'right'}}>
-                            (These buttons are only enabled for contributors who have not voted --{'>'})
-                            <Button variant="success" type="submit" disabled={votingButton} onClick={()=>{Vote(1)}}>Approve</Button>&nbsp;
-                            <Button variant="danger" type="submit" disabled={votingButton} onClick={()=>{Vote(0)}}>Refuse</Button>
+                            <span style={{ float: 'right' }}>
+                                (These buttons are only enabled for contributors who have not voted --{'>'})
+                                <Button variant="success" type="submit" disabled={votingButton} onClick={() => { Vote(1) }}>Approve</Button>&nbsp;
+                                <Button variant="danger" type="submit" disabled={votingButton} onClick={() => { Vote(0) }}>Refuse</Button>
                             </span>
                             <br /><br />
                             {viewContributorsVotingTable ?
@@ -189,34 +186,37 @@ function VotingEventPage() {
                 </Card>
             </div>
             <Modal
-                    show={popup}
-                    onHide={async () => {
-                        setPopup(false);
-                    }}
-                    size="lg">
-                    <Modal.Header closeButton>
-                        <Modal.Title>AJ Crowdfunding Platform Message Popup</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div>
-                            <b style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}>
-                                {message}</b>
-                        </div>
-                        {
-                            message.includes('progress') ?
-                                <div style={{ float: "right" }}>
-                                    <CountdownCircleTimer
-                                        isPlaying
-                                        duration={30}
-                                        colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                                        colorsTime={[20, 15, 10, 5]}
-                                        size="90">
-                                        {({ remainingTime }) => remainingTime}
-                                    </CountdownCircleTimer>
-                                </div>
-                                : <></>}
-                    </Modal.Body>
-                </Modal>
+                show={popup}
+                onHide={async () => {
+                    setPopup(false);
+                }}
+                size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>AJ Crowdfunding Platform Message Popup</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div>
+                        <b
+                            style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}
+                            dangerouslySetInnerHTML={{ __html: message }}
+                        >
+                        </b>
+                    </div>
+                    {
+                        message.includes('progress') ?
+                            <div style={{ float: "right" }}>
+                                <CountdownCircleTimer
+                                    isPlaying
+                                    duration={30}
+                                    colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                                    colorsTime={[20, 15, 10, 5]}
+                                    size="90">
+                                    {({ remainingTime }) => remainingTime}
+                                </CountdownCircleTimer>
+                            </div>
+                            : <></>}
+                </Modal.Body>
+            </Modal>
         </>
     )
 }

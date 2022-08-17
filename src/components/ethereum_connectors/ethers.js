@@ -6,7 +6,7 @@ var provider,signer;
 if (typeof window.ethereum != "undefined") {
 //create web3 provider
   provider = new ethers.providers.Web3Provider(window.ethereum)
-//   var test =  async () => await provider.send("eth_requestAccounts", []);
+
 // signer for performing transactions using metamask
   signer = provider.getSigner();
 } 
@@ -15,7 +15,7 @@ else {
 //create provider instance with infura 
   provider = new ethers.providers.InfuraProvider(
     'rinkeby',
-    '0fea43cd4e7541c78c1967a263e7189d'
+    'd1bcda716078458b90d0962f45b0a1a2'
   )
 
   signer = new ethers.Wallet('0x013010ea2e56a229b2207f8e21316f27f051e4e43967ee36c342aa568c7b9016', provider);

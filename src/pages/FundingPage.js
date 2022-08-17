@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { FundingContract } from '../components/ethereum_connectors/FundingContract.js';
+import { FundingContractEthers } from '../components/ethereum_connectors/FundingContractEthers.js';
 import { Card, Table, Button, Form, InputGroup, Modal } from 'react-bootstrap';
-import web3 from '../components/ethereum_connectors/web3';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
@@ -10,6 +10,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 function FundingPage() {
     const [cookies, setCookie] = useCookies();
     const [fundingcontract, setfundingcontract] = useState(FundingContract(cookies.EventAddress));
+    const [fundingcontractethers, setfundingcontractethers] = useState(FundingContractEthers(cookies.EventAddress));
     const [fundDetails, setFundDetails] = useState({});
     const [votingEventDetails, setVotingEventDetails] = useState([]);
 
@@ -66,14 +67,12 @@ function FundingPage() {
     var ContributeFunds = async () => {
         setCreateVotingEventButtonStatus(true);
         try {
-            setMessage("Voting event creation in progress .... !!!!");
+            setMessage("User contribution in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontract.methods
-                .DepositToCrowdfundingEvent()
-                .send({
-                    from: cookies.MetamaskLoggedInAddress, value: Web3.utils.toWei(depositAmount, 'ether')
-                });
-            setMessage("Voting event creation success...... !!!!" + "block hash : " + temp.blockHash);
+            const temp = await fundingcontractethers
+                .DepositToCrowdfundingEvent({ value: Web3.utils.toWei(depositAmount, 'ether') })
+            await temp.wait();
+            setMessage("User contribution success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
@@ -85,15 +84,16 @@ function FundingPage() {
     var CreateVotingEvent = async () => {
         setContributeButtonStatus(true);
         try {
-            setMessage("User contribution in progress .... !!!!");
+            setMessage("Voting event creation in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontract.methods
-                .CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
-                .send({
-                    from: cookies.MetamaskLoggedInAddress
-                });
-            //const temp = await fundingcontract1.CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'));
-            setMessage("User contribution success...... !!!!" + "block hash : " + temp.blockHash);
+            const temp = await fundingcontractethers
+                .CreateAnVotingEvent(
+                    createVotingEventDetails.title, 
+                    createVotingEventDetails.description, 
+                    createVotingEventDetails.destination_address, 
+                    Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
+                await temp.wait();
+                setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
@@ -168,13 +168,13 @@ function FundingPage() {
                             <Card.Text>
                                 Total Number of Contributors and Votes.
                                 <br /><br />
-                                <Button 
-                                    variant="primary" 
-                                    type="submit" 
-                                    onClick={() => { 
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    onClick={() => {
                                         setViewContributorsTable(!viewContributorsTable)
                                         setViewVotingEventsTable(false)
-                                        }}>
+                                    }}>
                                     {!viewContributorsTable ? 'View' : 'Hide'} Contributors</Button>
                                 <br /><br />
                             </Card.Text>
@@ -190,9 +190,9 @@ function FundingPage() {
                                 <Button
                                     variant="primary"
                                     type="submit"
-                                    onClick={() => { 
-                                        setViewCreateVotingEventForm(!viewCreateVotingEventForm) 
-                                        }}>
+                                    onClick={() => {
+                                        setViewCreateVotingEventForm(!viewCreateVotingEventForm)
+                                    }}>
                                     {!viewCreateVotingEventForm ? 'Create Voting Event' : 'Hide Create Voting Event Form'}</Button>
                                 <br /><br />
                                 {viewCreateVotingEventForm ? <>
@@ -237,10 +237,10 @@ function FundingPage() {
                                     <br /><br />
                                 </> : <></>}
 
-                                <Button 
-                                    variant="primary" 
-                                    type="submit" 
-                                    onClick={() => { 
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    onClick={() => {
                                         setViewVotingEventsTable(!viewVotingEventsTable)
                                         setViewContributorsTable(false)
                                     }}>
@@ -295,7 +295,7 @@ function FundingPage() {
                                             <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
                                             <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
                                                 {
-                                                    !item.event_completion_status ? 'In Progress' : item.event_success_status ? 'Successcul' : "Failed"
+                                                    !item.event_completion_status ? 'In Progress' : item.event_success_status ? 'Successful' : "Failed"
                                                 }
                                             </td>
                                         </tr>
@@ -315,8 +315,11 @@ function FundingPage() {
                     </Modal.Header>
                     <Modal.Body>
                         <div>
-                            <b style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}>
-                                {message}</b>
+                            <b
+                                style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}
+                                dangerouslySetInnerHTML={{ __html: message }}
+                            >
+                            </b>
                         </div>
                         {
                             message.includes('progress') ?

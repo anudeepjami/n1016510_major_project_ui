@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { Form, Button, Modal } from 'react-bootstrap';
-import {MainContract} from '../components/ethereum_connectors/MainContract.js';
-import web3 from '../components/ethereum_connectors/web3';
+import { MainContractEthers } from '../components/ethereum_connectors/MainContractEthers.js';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 function CreateFundingEventPage() {
 
-  const[cookies, setCookie] = useCookies();
-  const [maincontract, setMaincontract] = useState(MainContract());
+  const [maincontractethers, setMaincontractethers] = useState(MainContractEthers());
   const [crowdfundingEvents, setCrowdfundingEvents] = useState({
     title: "Enter Title (cannot be empty)",
     content: "Enter some info about your funding event (cannot be empty)",
@@ -47,12 +44,13 @@ function CreateFundingEventPage() {
     try {
       setMessage("Contract creation in progress .... !!!!");
       setPopup(true);
-      const temp = await maincontract.methods
-        .CreateCrowdfundingEvent(crowdfundingEvents.title, crowdfundingEvents.content, Web3.utils.toWei(crowdfundingEvents.min_deposit, 'ether'))
-        .send({
-          from: cookies.MetamaskLoggedInAddress
-        });
-      setMessage(" Crowdfunding event created successfully ...... !!!!" + "block hash : " + temp.blockHash);
+      const temp = await maincontractethers
+        .CreateCrowdfundingEvent(
+          crowdfundingEvents.title,
+          crowdfundingEvents.content,
+          Web3.utils.toWei(crowdfundingEvents.min_deposit, 'ether'));
+      await temp.wait();
+      setMessage(" Crowdfunding event created successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
     }
     catch (error) {
       error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
@@ -61,7 +59,7 @@ function CreateFundingEventPage() {
   }
 
   var PopupHandler = async () => {
-    message.includes("progress") || message.includes("Error") ? setPopup(false) : window.location.href = '/'; 
+    message.includes("progress") || message.includes("Error") ? setPopup(false) : window.location.href = '/';
   }
 
   return (
@@ -92,8 +90,11 @@ function CreateFundingEventPage() {
         </Modal.Header>
         <Modal.Body>
           <div>
-            <b style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}>
-              {message}</b>
+            <b
+              style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}
+              dangerouslySetInnerHTML={{ __html: message }}
+            >
+            </b>
           </div>
           {
             message.includes('progress') ?
@@ -107,7 +108,7 @@ function CreateFundingEventPage() {
                   {({ remainingTime }) => remainingTime}
                 </CountdownCircleTimer>
               </div>
-              :<></>}
+              : <></>}
         </Modal.Body>
       </Modal>
     </>

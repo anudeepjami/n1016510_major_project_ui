@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {MainContract} from '../components/ethereum_connectors/MainContract.js';
+import { MainContract } from '../components/ethereum_connectors/MainContract.js';
 import { Card } from 'react-bootstrap';
-import web3 from 'web3';
 import Web3 from 'web3';
 import {useCookies} from 'react-cookie'
 
@@ -45,7 +44,7 @@ function HomePage() {
                   <Card.Title><b>{item.crowdfunding_event_title}</b></Card.Title>
                   <Card.Text>
                     {item.crowdfunding_event_content} <br />
-                    minimum contribution required : {Web3.utils.fromWei(item.crowdfunding_event_min_deposit, 'ether') + " eth"}
+                    minimum contribution required : {Web3.utils.fromWei(item.crowdfunding_event_min_deposit.toString(), 'ether') + " eth"}
                   </Card.Text>
                 </Card.Body>
                 <Card.Footer className="text-muted"><b>fund manager: {item.crowdfunding_event_manager_address}</b></Card.Footer>

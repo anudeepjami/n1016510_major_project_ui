@@ -10,7 +10,7 @@ export function MainContract(){
     return new web3.eth
     .Contract(
         crowdfundingEventsContract.interface, 
-        '0x54fef7cDaf59D284Ca0620fc06F0a811ed7EA858', 
+        '0x7CaC995882Ebc93dfD5B5c5A3Bcad75c23619db1', 
         {handleRevert: true}
     );
 }
