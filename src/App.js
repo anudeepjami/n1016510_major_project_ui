@@ -7,6 +7,7 @@ import CreateFundingEventPage from './pages/CreateFundingEventPage';
 import FundingPage from './pages/FundingPage';
 import VotingEventPage from './pages/VotingEventPage';
 import { ethers } from 'ethers';
+import User from './pages/User';
 
 function App() {
 
@@ -36,7 +37,7 @@ function App() {
             <Nav.Link style={{ color: "white" }} href="/">Home</Nav.Link>
           </Nav>
           <Nav className="justify-content-end">
-            <Nav.Link href="/create"><Button variant="primary">Create Funding Event</Button></Nav.Link>
+            <Nav.Link href="/create"><Button variant="primary">Create a Crowdfunding Campaign</Button></Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -46,6 +47,7 @@ function App() {
           <Route path='/create' element={<CreateFundingEventPage />} />
           <Route path='/fund' element={< FundingPage />} />
           <Route path='/vote' element={< VotingEventPage />} />
+          <Route path='/user' element={< User />} />
         </Routes>
       </Router>
     </div>

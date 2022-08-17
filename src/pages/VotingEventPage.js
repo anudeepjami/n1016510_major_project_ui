@@ -193,7 +193,6 @@ function VotingEventPage() {
                                 {!viewContributorsVotingTable ? 'View' : 'Hide'} Contributors Voting Table
                             </Button>&nbsp;
                             <span style={{ float: 'right' }}>
-                                (These buttons are only enabled for contributors who have not voted --{'>'})
                                 <Button variant="success" type="submit" disabled={votingButton} onClick={() => { Vote(1) }}>Approve</Button>&nbsp;
                                 <Button variant="danger" type="submit" disabled={votingButton} onClick={() => { Vote(0) }}>Refuse</Button>
                             </span>

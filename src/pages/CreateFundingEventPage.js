@@ -9,7 +9,7 @@ function CreateFundingEventPage() {
   const [maincontractethers, setMaincontractethers] = useState(MainContractEthers());
   const [crowdfundingEvents, setCrowdfundingEvents] = useState({
     title: "Enter Title (cannot be empty)",
-    content: "Enter some info about your funding event (cannot be empty)",
+    content: "Enter some info about your funding campaign (cannot be empty)",
     min_deposit: "0.1"
   });
   const [popup, setPopup] = useState(false);
@@ -33,7 +33,7 @@ function CreateFundingEventPage() {
     if (event.type === "click") {
       if (event.currentTarget.id === "1" && temp.title === "Enter Title (cannot be empty)")
         temp.title = "";
-      if (event.currentTarget.id === "2" && temp.content === "Enter some info about your funding event (cannot be empty)")
+      if (event.currentTarget.id === "2" && temp.content === "Enter some info about your funding campaign (cannot be empty)")
         temp.content = "";
     }
     setCrowdfundingEvents(temp);
@@ -42,7 +42,7 @@ function CreateFundingEventPage() {
   var CreateCrowdfundingEvent = async () => {
     setButtonStatus(true);
     try {
-      setMessage("Contract creation in progress .... !!!!");
+      setMessage("Crowdfunding campaign act creation in progress .... !!!!");
       setPopup(true);
       const temp = await maincontractethers
         .CreateCrowdfundingEvent(
@@ -50,7 +50,7 @@ function CreateFundingEventPage() {
           crowdfundingEvents.content,
           Web3.utils.toWei(crowdfundingEvents.min_deposit, 'ether'));
       await temp.wait();
-      setMessage(" Crowdfunding event created successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+      setMessage(" Crowdfunding campaign created successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
     }
     catch (error) {
       error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
@@ -65,7 +65,7 @@ function CreateFundingEventPage() {
   return (
     <>
       <div style={{ width: "50%", margin: "0 auto" }} >
-        <h1>Create a CrowdFunding Event</h1>
+        <h1>Create a CrowdFunding Campaign</h1>
         <Form>
           <Form.Group className="mb-4">
             <Form.Label>Title :</Form.Label>

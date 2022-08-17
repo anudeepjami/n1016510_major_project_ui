@@ -31,7 +31,7 @@ function HomePage() {
   return (
     <div>
       <div style={{ width: "50%", margin: "0 auto" }}>
-        <h1 className="text-center">Crowdfunding Events</h1>
+        <h1 className="text-center">Crowdfunding Campaigns</h1>
         <h3 style={{ textAlign: 'right' }}>(total events: {crowdfundingEvents.length})</h3>
         {crowdfundingEvents.map((item, index) => {
           return (
