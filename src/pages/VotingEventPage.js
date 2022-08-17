@@ -38,7 +38,11 @@ function VotingEventPage() {
         const temp1 = await fundingcontract.methods.GetVotingEvents().call();
         setVotingEventDetails(temp1[cookies.VotingIndex]);
         var tempTable = [];
-        var tempVoteDivision = { approved: 0, refused: 0, yettovote: 0, total: 0 };
+        var tempVoteDivision = { 
+            approved: temp1[cookies.VotingIndex].yes_votes, 
+            refused: temp1[cookies.VotingIndex].no_votes, 
+            yettovote: parseInt(temp[5]) - parseInt(temp1[cookies.VotingIndex].yes_votes) - parseInt(temp1[cookies.VotingIndex].no_votes), 
+            total: temp[5] };
         temp[4].forEach((element, index) => {
             temp1[cookies.VotingIndex].polling_data.forEach((element2) => {
                 if (element.contributor_address == element2.contributor_address) {
@@ -47,9 +51,6 @@ function VotingEventPage() {
                         contributor_vote_status: element2.contributor_vote_status,
                         contributor_votes: element.contributor_votes
                     });
-                    element2.contributor_vote_status ?
-                        tempVoteDivision.approved = tempVoteDivision.approved + parseInt(element.contributor_votes) :
-                        tempVoteDivision.refused = tempVoteDivision.refused + parseInt(element.contributor_votes);
                 }
             })
             if (tempTable[index] == undefined) {
@@ -57,11 +58,9 @@ function VotingEventPage() {
                     contributor_address: element.contributor_address,
                     contributor_votes: element.contributor_votes
                 });
-                tempVoteDivision.yettovote = tempVoteDivision.yettovote + parseInt(element.contributor_votes);
                 if (cookies.MetamaskLoggedInAddress == element.contributor_address)
                     setVotingButton(false);
             }
-            tempVoteDivision.total = tempVoteDivision.total + parseInt(element.contributor_votes);
         });
         setVoteDivision(tempVoteDivision);
         setContributorsVotingTable(tempTable);
