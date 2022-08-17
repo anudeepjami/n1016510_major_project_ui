@@ -4,7 +4,7 @@ var web3;
  
 //checks if browser has metmask or anyother wallet configured
 if (typeof window.ethereum != "undefined") {
-//create metamask instance
+//connection request to metamask
   window.ethereum.request({ method: "eth_requestAccounts" });
 //load from metamask
   web3 = new Web3(window.ethereum);

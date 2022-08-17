@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { FundingContract } from '../components/ethereum_connectors/FundingContract.js';
+import { FundingContract, FundingContractEthers } from '../components/ethereum_connectors/FundingContract.js';
 import { Card, Table, Button, Form, InputGroup, Modal } from 'react-bootstrap';
 import web3 from '../components/ethereum_connectors/web3';
 import Web3 from 'web3';
@@ -10,6 +10,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 function FundingPage() {
     const [cookies, setCookie] = useCookies();
     const [fundingcontract, setfundingcontract] = useState(FundingContract(cookies.EventAddress));
+    const [fundingcontract1, setfundingcontract1] = useState(FundingContractEthers(cookies.EventAddress));
     const [fundDetails, setFundDetails] = useState({});
     const [votingEventDetails, setVotingEventDetails] = useState([]);
 
@@ -87,11 +88,12 @@ function FundingPage() {
         try {
             setMessage("User contribution in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontract.methods
-                .CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
-                .send({
-                    from: cookies.MetamaskLoggedInAddress
-                });
+            // const temp = await fundingcontract.methods
+            //     .CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
+            //     .send({
+            //         from: cookies.MetamaskLoggedInAddress
+            //     });
+            const temp = await fundingcontract1.CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'));
             setMessage("User contribution success...... !!!!" + "block hash : " + temp.blockHash);
         }
         catch (error) {
@@ -126,7 +128,7 @@ function FundingPage() {
                     <Card className='m-1'>
                         <Card.Header as="h4">Fund Minimum Contribution</Card.Header>
                         <Card.Body>
-                            <Card.Title>{web3.utils.fromWei(fundDetails[3] == undefined ? '0' : fundDetails[3].toString(), 'ether') + " eth"}</Card.Title>
+                            <Card.Title>{Web3.utils.fromWei(fundDetails[3] == undefined ? '0' : fundDetails[3].toString(), 'ether') + " eth"}</Card.Title>
                             <Card.Text>
                                 Deposits should be made equal to or in multiples of the minimum set for this fund.
                                 <br /><br />
@@ -151,7 +153,7 @@ function FundingPage() {
                     <Card className='m-1'>
                         <Card.Header as="h4">Fund Wallet Balance</Card.Header>
                         <Card.Body>
-                            <Card.Title>{web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " eth"}</Card.Title>
+                            <Card.Title>{Web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " eth"}</Card.Title>
                             <Card.Text>
                                 This is the balance left for the fund manager to spend from the funds ethereum account.
                             </Card.Text>
@@ -264,7 +266,7 @@ function FundingPage() {
                                     return (
                                         <tr key={index}>
                                             <td>{item.contributor_address}</td>
-                                            <td>{web3.utils.fromWei((item.contributor_votes * fundDetails[3]).toString(), 'ether') + " eth"}</td>
+                                            <td>{Web3.utils.fromWei((item.contributor_votes * fundDetails[3]).toString(), 'ether') + " eth"}</td>
                                             <td>{item.contributor_votes}</td>
                                         </tr>
                                     )
@@ -291,7 +293,7 @@ function FundingPage() {
                                             onClick={() => LoadVotingPage(index)}>
                                             <td>{item.title}</td>
                                             <td>{item.destination_wallet_address}</td>
-                                            <td>{web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
+                                            <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
                                             <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
                                                 {
                                                     !item.event_completion_status ? 'In Progress' : item.event_success_status ? 'Successcul' : "Failed"
