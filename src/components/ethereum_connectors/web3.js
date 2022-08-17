@@ -3,7 +3,7 @@ import Web3 from "web3";
 var web3;
  
 //checks if browser has metmask or anyother wallet configured
-if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
+if (typeof window.ethereum != "undefined") {
 //create metamask instance
   window.ethereum.request({ method: "eth_requestAccounts" });
 //load from metamask

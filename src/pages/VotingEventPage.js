@@ -17,7 +17,8 @@ function VotingEventPage() {
     const [viewContributorsVotingTable, setViewContributorsVotingTable] = useState(false);
     const [contributorsVotingTable, setContributorsVotingTable] = useState([]);
 
-    const [votingButton, setVotingButton] = useState(false);
+    const [votingButton, setVotingButton] = useState(true);
+    const [pollingButton, setPollingButton] = useState(false);
 
     const [popup, setPopup] = useState(false);
     const [message, setMessage] = useState("");
@@ -55,6 +56,8 @@ function VotingEventPage() {
                     contributor_votes: element.contributor_votes
                 });
                 tempVoteDivision.yettovote = tempVoteDivision.yettovote + parseInt(element.contributor_votes);
+                if(cookies.MetamaskLoggedInAddress == element.contributor_address)
+                setVotingButton(false);
             }
             tempVoteDivision.total = tempVoteDivision.total + parseInt(element.contributor_votes);
         });
@@ -82,6 +85,25 @@ function VotingEventPage() {
         await LoadVotingDetails();
     }
 
+    var ClosePolling = async () => {
+        setPollingButton(true);
+        try {
+            setMessage("Close polling in progress .... !!!!");
+            setPopup(true);
+            const temp = await fundingcontract.methods
+                .CompleteVotingEvent(cookies.VotingIndex)
+                .send({
+                    from: cookies.MetamaskLoggedInAddress
+                });
+            setMessage("Polling closed successfully...... !!!!" + "block hash : " + temp.blockHash);
+        }
+        catch (error) {
+            error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+        }
+        setPollingButton(false);
+        await LoadVotingDetails();
+    }
+
 
     return (
         <>
@@ -99,14 +121,28 @@ function VotingEventPage() {
                 </Card>
                 <br />
                 <Card>
-                    <Card.Header><b>Voting Details</b></Card.Header>
+                    <Card.Header>
+                        <b>Voting Details</b>
+                        <Button 
+                            variant="primary" 
+                            type="submit" 
+                            disabled={pollingButton} 
+                            onClick={ClosePolling}
+                            style={{float: 'right'}}
+                            >
+                                Close Polling
+                        </Button>
+                    </Card.Header>
                     <ListGroup variant="flush">
-                        <ListGroup.Item><p><b>Voting Event Status</b>:&nbsp;
+                        <ListGroup.Item><b>Destination Wallet Address</b>: {votingEventDetails.destination_wallet_address}</ListGroup.Item>
+                        <ListGroup.Item><b>Amount Being Sent</b>: {web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}</ListGroup.Item>
+                        <ListGroup.Item><b>Voting Event Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
                                 {!votingEventDetails.event_completion_status ? 'In Progress' : votingEventDetails.event_success_status ? 'Successcul' : "Failed"}
                             </ins>
-                            </p>
-                            <p> 
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                            <p>
                                 <b>Vote Alignment: </b>
                                 Approved: <b style={{ color: 'green' }}>{voteDivision.approved}</b>, 
                                 Refused: <b style={{ color: 'red' }}>{voteDivision.refused}</b>, 
@@ -117,6 +153,7 @@ function VotingEventPage() {
                                 {!viewContributorsVotingTable ? 'View' : 'Hide'} Contributors Voting Table      
                             </Button>&nbsp;
                             <span style={{float: 'right'}}>
+                            (These buttons are only enabled for contributors who have not voted --{'>'})
                             <Button variant="success" type="submit" disabled={votingButton} onClick={()=>{Vote(1)}}>Approve</Button>&nbsp;
                             <Button variant="danger" type="submit" disabled={votingButton} onClick={()=>{Vote(0)}}>Refuse</Button>
                             </span>

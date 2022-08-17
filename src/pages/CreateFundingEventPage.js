@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Form, Button, Modal } from 'react-bootstrap';
-import maincontract from '../components/ethereum_connectors/MainContract.js';
+import {MainContract} from '../components/ethereum_connectors/MainContract.js';
 import web3 from '../components/ethereum_connectors/web3';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
@@ -9,6 +9,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 function CreateFundingEventPage() {
 
   const[cookies, setCookie] = useCookies();
+  const [maincontract, setMaincontract] = useState(MainContract());
   const [crowdfundingEvents, setCrowdfundingEvents] = useState({
     title: "Enter Title (cannot be empty)",
     content: "Enter some info about your funding event (cannot be empty)",

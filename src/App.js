@@ -13,7 +13,7 @@ function App() {
 
   const[cookies, setCookie] = useCookies();
 
-  //this is used for loading state components on page load
+  //this is used to detect metamask wallet address change
   useEffect(() => {
     var MetamaskAccountChangeDetector = async () => {
       window.ethereum.on("accountsChanged", async () => {
