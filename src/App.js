@@ -6,8 +6,7 @@ import HomePage from './pages/HomePage';
 import CreateFundingEventPage from './pages/CreateFundingEventPage';
 import FundingPage from './pages/FundingPage';
 import VotingEventPage from './pages/VotingEventPage';
-import detectEthereumProvider from '@metamask/detect-provider';
-import web3 from './components/ethereum_connectors/web3';
+import { ethers } from 'ethers';
 
 function App() {
 
@@ -17,7 +16,8 @@ function App() {
   useEffect(() => {
     var MetamaskAccountChangeDetector = async () => {
       window.ethereum.on("accountsChanged", async () => {
-        const metamaskLoggedInAddress = await web3.eth.getAccounts();
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const metamaskLoggedInAddress = await provider.listAccounts();
         setCookie('MetamaskLoggedInAddress', metamaskLoggedInAddress[0], { path: '/' });
         window.location.reload(true);
       });
