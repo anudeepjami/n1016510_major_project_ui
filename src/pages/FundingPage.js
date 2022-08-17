@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { FundingContract, FundingContractEthers } from '../components/ethereum_connectors/FundingContract.js';
+import { FundingContract } from '../components/ethereum_connectors/FundingContract.js';
 import { Card, Table, Button, Form, InputGroup, Modal } from 'react-bootstrap';
 import web3 from '../components/ethereum_connectors/web3';
 import Web3 from 'web3';
@@ -10,7 +10,6 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 function FundingPage() {
     const [cookies, setCookie] = useCookies();
     const [fundingcontract, setfundingcontract] = useState(FundingContract(cookies.EventAddress));
-    const [fundingcontract1, setfundingcontract1] = useState(FundingContractEthers(cookies.EventAddress));
     const [fundDetails, setFundDetails] = useState({});
     const [votingEventDetails, setVotingEventDetails] = useState([]);
 
@@ -88,12 +87,12 @@ function FundingPage() {
         try {
             setMessage("User contribution in progress .... !!!!");
             setPopup(true);
-            // const temp = await fundingcontract.methods
-            //     .CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
-            //     .send({
-            //         from: cookies.MetamaskLoggedInAddress
-            //     });
-            const temp = await fundingcontract1.CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'));
+            const temp = await fundingcontract.methods
+                .CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
+                .send({
+                    from: cookies.MetamaskLoggedInAddress
+                });
+            //const temp = await fundingcontract1.CreateAnVotingEvent(createVotingEventDetails.title, createVotingEventDetails.description, createVotingEventDetails.destination_address, Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'));
             setMessage("User contribution success...... !!!!" + "block hash : " + temp.blockHash);
         }
         catch (error) {
