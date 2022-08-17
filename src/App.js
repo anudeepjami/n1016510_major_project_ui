@@ -14,6 +14,7 @@ function App() {
 
   //this is used to detect metamask wallet address change
   useEffect(() => {
+    if (typeof window.ethereum != "undefined") {
     var MetamaskAccountChangeDetector = async () => {
       window.ethereum.on("accountsChanged", async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -23,6 +24,7 @@ function App() {
       });
     }
     MetamaskAccountChangeDetector();
+  }
   }, []);
 
   return (
