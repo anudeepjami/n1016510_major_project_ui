@@ -5,6 +5,7 @@ import { FundingContractEthers } from '../components/ethereum_connectors/Funding
 import { Card, Table, Button, Form, InputGroup, Modal } from 'react-bootstrap';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import { Rating } from 'react-simple-star-rating';
 
 
 function FundingPage() {
@@ -13,6 +14,7 @@ function FundingPage() {
     const [fundingcontractethers, setfundingcontractethers] = useState(FundingContractEthers(cookies.EventAddress));
     const [fundDetails, setFundDetails] = useState({});
     const [votingEventDetails, setVotingEventDetails] = useState([]);
+    const [discussionFormList, setDiscussionFormList] = useState([]);
 
     const [viewContributeButton, setViewContributeButton] = useState(false);
     const [viewContributorsTable, setViewContributorsTable] = useState(false);
@@ -32,6 +34,10 @@ function FundingPage() {
         deposit_amount: ""
     });
 
+    const [comment, setComment] = useState("");
+    const [rating, setRating] = useState(0);
+    const [commentButton, setCommentButton] = useState(false);
+
     //this is used for loading state components on page load
     useEffect(() => {
         (async () => {
@@ -42,6 +48,17 @@ function FundingPage() {
     var LoadFundDetails = async () => {
         setFundDetails(await fundingcontract.methods.GetCrowdfundingEventDetails().call());
         setVotingEventDetails(await fundingcontract.methods.GetVotingEvents().call());
+        const temp = await fundingcontract.methods.GetCrowdfundingDiscussionForum().call();
+        var discussionsList = [];
+        temp.forEach((item) => {
+            if (item.index == cookies.VotingIndex)
+                discussionsList.push({
+                    comment: item.comment,
+                    comment_address: item.comment_address,
+                    rating: item.rating
+                });
+        });
+        setDiscussionFormList(discussionsList);
     }
 
     var LoadVotingEventDetails = async (event) => {
@@ -88,18 +105,46 @@ function FundingPage() {
             setPopup(true);
             const temp = await fundingcontractethers
                 .CreateAnVotingEvent(
-                    createVotingEventDetails.title, 
-                    createVotingEventDetails.description, 
-                    createVotingEventDetails.destination_address, 
+                    createVotingEventDetails.title,
+                    createVotingEventDetails.description,
+                    createVotingEventDetails.destination_address,
                     Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
-                await temp.wait();
-                setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+            await temp.wait();
+            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
         }
         setContributeButtonStatus(false);
         await LoadFundDetails();
+    }
+
+    var SubmitComment = async (e) => {
+        e.preventDefault();
+        if (comment == "" || rating == 0) {
+            window.alert("comment or rating cannot be empty");
+        }
+        else {
+            setCommentButton(true);
+            try {
+                setMessage("Comment submission in progress .... !!!!");
+                setPopup(true);
+                const temp = await fundingcontractethers
+                    .CrowdfundingDiscussionForum(
+                        cookies.VotingIndex,
+                        comment,
+                        rating)
+                await temp.wait();
+                setMessage("Comment submission success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+            }
+            catch (error) {
+                error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+            }
+            setCommentButton(false);
+            await LoadFundDetails();
+            setComment("");
+            setRating(0);
+        }
     }
 
     var LoadVotingPage = async (event) => {
@@ -303,6 +348,68 @@ function FundingPage() {
                                 })}
                             </tbody>
                         </Table> : <></>}
+                </div>
+                <div>
+                    <br />
+                    <Card>
+                        <Card.Header><h4>Discussion Form for Fund</h4></Card.Header>
+                        <br />
+                        {discussionFormList.map((item, index) => {
+                            return (
+                                <div key={index}>
+                                    <Card style={{ width: "90%", margin: "0 auto" }}>
+                                        <Card.Header>
+                                            <div className='d-flex'>
+                                                <div className='m1' style={{ width: "60%" }}>
+                                                    <b>User: {item.comment_address}</b>
+                                                </div>
+                                                <div className='m1' style={{ width: '40%' }}>
+                                                    <Rating
+                                                        ratingValue={parseInt(item.rating)}
+                                                        readonly={true}
+                                                        size={30}
+                                                    >
+                                                    </Rating>
+                                                </div>
+                                            </div>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <Card.Text>
+                                                {item.comment}
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                    <br />
+                                </div>
+                            )
+                        })
+                        }
+                        <Form style={{ width: "90%", margin: "0 auto" }}>
+                            <Form.Group className="mb-3">
+                                <Form.Control
+                                    as="textarea"
+                                    rows={3}
+                                    placeholder="Enter your comments..!!"
+                                    onChange={(e) => { setComment(e.target.value) }}
+                                />
+                                <br />
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    disabled={commentButton}
+                                    onClick={SubmitComment}
+                                >
+                                    Comment
+                                </Button>
+                                <Rating
+                                    ratingValue={rating}
+                                    onClick={(e) => { setRating(e) }}
+                                >
+                                </Rating>
+                                <span> {'<<--'} Please give your star rating here</span>
+                            </Form.Group>
+                        </Form>
+                    </Card>
                 </div>
                 <Modal
                     show={popup}

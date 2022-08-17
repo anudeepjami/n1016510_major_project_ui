@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { FundingContract } from '../components/ethereum_connectors/FundingContract.js';
 import { FundingContractEthers } from '../components/ethereum_connectors/FundingContractEthers.js';
-import { Card, ListGroup, Button, Table, Modal } from 'react-bootstrap';
+import { Card, ListGroup, Button, Table, Modal, Form } from 'react-bootstrap';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import { Rating } from 'react-simple-star-rating';
 
 function VotingEventPage() {
 
@@ -15,15 +16,20 @@ function VotingEventPage() {
     const [fundDetails, setFundDetails] = useState({});
     const [votingEventDetails, setVotingEventDetails] = useState({});
     const [voteDivision, setVoteDivision] = useState({});
+    const [discussionFormList, setDiscussionFormList] = useState([]);
 
     const [viewContributorsVotingTable, setViewContributorsVotingTable] = useState(false);
     const [contributorsVotingTable, setContributorsVotingTable] = useState([]);
 
-    const [votingButton, setVotingButton] = useState(true);
+    const [votingButton, setVotingButton] = useState(false);
     const [pollingButton, setPollingButton] = useState(false);
 
     const [popup, setPopup] = useState(false);
     const [message, setMessage] = useState("");
+
+    const [comment, setComment] = useState("");
+    const [rating, setRating] = useState(0);
+    const [commentButton, setCommentButton] = useState(false);
 
     //this is used for loading state components on page load
     useEffect(() => {
@@ -58,10 +64,19 @@ function VotingEventPage() {
                     contributor_address: element.contributor_address,
                     contributor_votes: element.contributor_votes
                 });
-                if (cookies.MetamaskLoggedInAddress == element.contributor_address)
-                    setVotingButton(false);
             }
         });
+        const temp2 = await fundingcontract.methods.GetCrowdfundingDiscussionForum().call();
+        var discussionsList = [];
+        temp2.forEach((item) => {
+            if (item.index == cookies.VotingIndex)
+                discussionsList.push({
+                    comment: item.comment,
+                    comment_address: item.comment_address,
+                    rating: item.rating
+                });
+        });
+        setDiscussionFormList(discussionsList);
         setVoteDivision(tempVoteDivision);
         setContributorsVotingTable(tempTable);
 
@@ -79,8 +94,8 @@ function VotingEventPage() {
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
-            setVotingButton(false);
         }
+        setVotingButton(false);
         await LoadVotingDetails();
     }
 
@@ -99,6 +114,34 @@ function VotingEventPage() {
         }
         setPollingButton(false);
         await LoadVotingDetails();
+    }
+
+    var SubmitComment = async (e) => {
+        e.preventDefault();
+        if (comment == "" || rating == 0) {
+            window.alert("comment or rating cannot be empty");
+        }
+        else {
+            setCommentButton(true);
+            try {
+                setMessage("Comment submission in progress .... !!!!");
+                setPopup(true);
+                const temp = await fundingcontractethers
+                    .CrowdfundingDiscussionForum(
+                        cookies.VotingIndex,
+                        comment,
+                        rating)
+                await temp.wait();
+                setMessage("Comment submission success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+            }
+            catch (error) {
+                error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+            }
+            setCommentButton(false);
+            await LoadVotingDetails();
+            setComment("");
+            setRating(0);
+        }
     }
 
 
@@ -183,7 +226,69 @@ function VotingEventPage() {
                         </ListGroup.Item>
                     </ListGroup>
                 </Card>
-            </div>
+            
+            <div>
+                    <br />
+                    <Card>
+                        <Card.Header><h4>Discussion Form for Voting Event</h4></Card.Header>
+                        <br />
+                        {discussionFormList.map((item, index) => {
+                            return (
+                                <div key={index}>
+                                    <Card style={{ width: "90%", margin: "0 auto" }}>
+                                        <Card.Header>
+                                            <div className='d-flex'>
+                                                <div className='m1' style={{ width: "60%" }}>
+                                                    <b>User: {item.comment_address}</b>
+                                                </div>
+                                                <div className='m1' style={{ width: '40%' }}>
+                                                    <Rating
+                                                        ratingValue={parseInt(item.rating)}
+                                                        readonly={true}
+                                                        size={30}
+                                                    >
+                                                    </Rating>
+                                                </div>
+                                            </div>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <Card.Text>
+                                                {item.comment}
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                    <br />
+                                </div>
+                            )
+                        })
+                        }
+                        <Form style={{ width: "90%", margin: "0 auto" }}>
+                            <Form.Group className="mb-3">
+                                <Form.Control
+                                    as="textarea"
+                                    rows={3}
+                                    placeholder="Enter your comments..!!"
+                                    onChange={(e) => { setComment(e.target.value) }}
+                                />
+                                <br />
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    disabled={commentButton}
+                                    onClick={SubmitComment}
+                                >
+                                    Comment
+                                </Button>
+                                <Rating
+                                    ratingValue={rating}
+                                    onClick={(e) => { setRating(e) }}
+                                >
+                                </Rating>
+                                <span> {'<<--'} Please give your star rating here</span>
+                            </Form.Group>
+                        </Form>
+                    </Card>
+                </div>
             <Modal
                 show={popup}
                 onHide={async () => {
@@ -216,6 +321,7 @@ function VotingEventPage() {
                             : <></>}
                 </Modal.Body>
             </Modal>
+            </div>
         </>
     )
 }
