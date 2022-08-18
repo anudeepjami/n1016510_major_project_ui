@@ -16,15 +16,19 @@ function App() {
   //this is used to detect metamask wallet address change
   useEffect(() => {
     if (typeof window.ethereum != "undefined") {
-    var MetamaskAccountChangeDetector = async () => {
-      window.ethereum.on("accountsChanged", async () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const metamaskLoggedInAddress = await provider.listAccounts();
-        setCookie('MetamaskLoggedInAddress', metamaskLoggedInAddress[0], { path: '/' });
+    var RefreshPageOnMetmaskChange = async () => {
+      // Refresh page on meta mask account change
+      window.ethereum.on("accountsChanged", async (accounts) => {
+        setCookie('MetamaskLoggedInAddress', accounts[0], { path: '/' });
+        window.location.reload(true);
+      });
+      // Refresh page on meta mask network change
+      window.ethereum.on("chainChanged", async (chainId) => {
+        setCookie('MetamaskNetwork', chainId, { path: '/' });
         window.location.reload(true);
       });
     }
-    MetamaskAccountChangeDetector();
+    RefreshPageOnMetmaskChange();
   }
   }, []);
 
