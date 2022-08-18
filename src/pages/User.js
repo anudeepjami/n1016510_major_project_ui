@@ -25,7 +25,7 @@ function User() {
     }
 
     var UpdateDetails = async (e) => {
-        if (emailId.includes("@") && emailId != walletDetails[0].email_id) {
+        if (emailId.includes("@") && emailId != walletDetails[0]?.email_id) {
             await UpdateWalletDetails({
                 wallet_address: cookies.MetamaskLoggedInAddress,
                 email_id: emailId
