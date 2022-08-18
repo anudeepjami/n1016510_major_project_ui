@@ -9,7 +9,7 @@ import { Rating } from 'react-simple-star-rating';
 function VotingEventPage() {
 
     const [cookies, setCookie] = useCookies();
-    if(window.location.search != ""){
+    if (window.location.search != "") {
         var params = new URLSearchParams(window.location.search)
         setCookie('FundAddress', params.get('FundAddress'), { path: '/' });
         setCookie('VotingIndex', params.get('VotingIndex'), { path: '/' });
@@ -49,11 +49,12 @@ function VotingEventPage() {
         const temp1 = await fundingcontract.methods.GetVotingEvents().call();
         setVotingEventDetails(temp1[cookies.VotingIndex]);
         var tempTable = [];
-        var tempVoteDivision = { 
-            approved: temp1[cookies.VotingIndex].yes_votes, 
-            refused: temp1[cookies.VotingIndex].no_votes, 
-            yettovote: parseInt(temp[5]) - parseInt(temp1[cookies.VotingIndex].yes_votes) - parseInt(temp1[cookies.VotingIndex].no_votes), 
-            total: temp[5] };
+        var tempVoteDivision = {
+            approved: temp1[cookies.VotingIndex].yes_votes,
+            refused: temp1[cookies.VotingIndex].no_votes,
+            yettovote: parseInt(temp[5]) - parseInt(temp1[cookies.VotingIndex].yes_votes) - parseInt(temp1[cookies.VotingIndex].no_votes),
+            total: temp[5]
+        };
         temp[4].forEach((element, index) => {
             temp1[cookies.VotingIndex].polling_data.forEach((element2) => {
                 if (element.contributor_address == element2.contributor_address) {
@@ -99,10 +100,12 @@ function VotingEventPage() {
             const temp = await fundingcontractethers
                 .VoteForVotingEvent(cookies.VotingIndex, vote);
             await temp.wait();
-            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
-            error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                error.data.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                    : setMessage("Error : " + error.message);
         }
         setVotingButton(false);
         await LoadVotingDetails();
@@ -116,10 +119,12 @@ function VotingEventPage() {
             const temp = await fundingcontractethers
                 .CompleteVotingEvent(cookies.VotingIndex);
             await temp.wait();
-            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
-            error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                error.data.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                    : setMessage("Error : " + error.message);
         }
         setPollingButton(false);
         await LoadVotingDetails();
@@ -141,10 +146,12 @@ function VotingEventPage() {
                         comment,
                         rating)
                 await temp.wait();
-                setMessage("Comment submission success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+                setMessage("Comment submission success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             catch (error) {
-                error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+                error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                    error.data.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                        : setMessage("Error : " + error.message);
             }
             setCommentButton(false);
             await LoadVotingDetails();
@@ -234,8 +241,8 @@ function VotingEventPage() {
                         </ListGroup.Item>
                     </ListGroup>
                 </Card>
-            
-            <div>
+
+                <div>
                     <br />
                     <Card>
                         <Card.Header>
@@ -306,38 +313,38 @@ function VotingEventPage() {
                         </Form>
                     </Card>
                 </div>
-            <Modal
-                show={popup}
-                onHide={async () => {
-                    setPopup(false);
-                }}
-                size="lg">
-                <Modal.Header closeButton>
-                    <Modal.Title>AJ Crowdfunding Platform Message Popup</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div>
-                        <b
-                            style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}
-                            dangerouslySetInnerHTML={{ __html: message }}
-                        >
-                        </b>
-                    </div>
-                    {
-                        message.includes('progress') ?
-                            <div style={{ float: "right" }}>
-                                <CountdownCircleTimer
-                                    isPlaying
-                                    duration={30}
-                                    colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                                    colorsTime={[20, 15, 10, 5]}
-                                    size="90">
-                                    {({ remainingTime }) => remainingTime}
-                                </CountdownCircleTimer>
-                            </div>
-                            : <></>}
-                </Modal.Body>
-            </Modal>
+                <Modal
+                    show={popup}
+                    onHide={async () => {
+                        setPopup(false);
+                    }}
+                    size="lg">
+                    <Modal.Header closeButton>
+                        <Modal.Title>AJ Crowdfunding Platform Message Popup</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div>
+                            <b
+                                style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}
+                                dangerouslySetInnerHTML={{ __html: message }}
+                            >
+                            </b>
+                        </div>
+                        {
+                            message.includes('progress') ?
+                                <div style={{ float: "right" }}>
+                                    <CountdownCircleTimer
+                                        isPlaying
+                                        duration={30}
+                                        colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                                        colorsTime={[20, 15, 10, 5]}
+                                        size="90">
+                                        {({ remainingTime }) => remainingTime}
+                                    </CountdownCircleTimer>
+                                </div>
+                                : <></>}
+                    </Modal.Body>
+                </Modal>
             </div>
         </>
     )

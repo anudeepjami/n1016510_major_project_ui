@@ -97,10 +97,13 @@ function FundingPage() {
             const temp = await fundingcontractethers
                 .DepositToCrowdfundingEvent({ value: Web3.utils.toWei(depositAmount, 'ether') })
             await temp.wait();
-            setMessage("User contribution success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+            setMessage("User contribution success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash
+                + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
-            error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                error.data.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                    : setMessage("Error : " + error.message);
         }
         setCreateVotingEventButtonStatus(false);
         await LoadFundDetails();
@@ -120,10 +123,12 @@ function FundingPage() {
             await temp.wait();
             var temp2 = await fundingcontract.methods.GetVotingEvents().call();
             await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
-            setMessage("Voting event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+            setMessage("Voting event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
-            error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                error.data.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                    : setMessage("Error : " + error.message);
         }
         setContributeButtonStatus(false);
         await LoadFundDetails();
@@ -145,10 +150,12 @@ function FundingPage() {
                         comment,
                         rating)
                 await temp.wait();
-                setMessage("Comment submission success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+                setMessage("Comment submission success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             catch (error) {
-                error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
+                error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                    error.data.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                        : setMessage("Error : " + error.message);
             }
             setCommentButton(false);
             await LoadFundDetails();
