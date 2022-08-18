@@ -20,6 +20,7 @@ function FundingPage() {
     const [viewContributorsTable, setViewContributorsTable] = useState(false);
     const [viewVotingEventsTable, setViewVotingEventsTable] = useState(false);
     const [viewCreateVotingEventForm, setViewCreateVotingEventForm] = useState(false);
+    const [viewRefund, setViewRefund] = useState(false);
 
     const [popup, setPopup] = useState(false);
     const [message, setMessage] = useState("");
@@ -101,7 +102,7 @@ function FundingPage() {
                 + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
-            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+            error.reason != undefined ? setMessage("Error : " + (error.reason.includes("execution reverted:") ? error.reason.split("execution reverted:")[1] : error.reason)) :
                 error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                     : setMessage("Error : " + error.message);
         }
@@ -118,16 +119,16 @@ function FundingPage() {
                 .CreateAnVotingEvent(
                     createVotingEventDetails.title,
                     createVotingEventDetails.description,
-                    createVotingEventDetails.destination_address,
-                    Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'),
-                    e.target.id == "refund" ? 1: 0)
+                    viewRefund ? cookies.FundAddress : createVotingEventDetails.destination_address,
+                    viewRefund ? fundDetails[6].toString() : Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'),
+                    e.target.id == "refund" ? 1 : 0)
             await temp.wait();
             var temp2 = await fundingcontract.methods.GetVotingEvents().call();
             await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
             setMessage("Voting event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
-            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+            error.reason != undefined ? setMessage("Error : " + (error.reason.includes("execution reverted:") ? error.reason.split("execution reverted:")[1] : error.reason)) :
                 error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                     : setMessage("Error : " + error.message);
         }
@@ -154,7 +155,7 @@ function FundingPage() {
                 setMessage("Comment submission success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             catch (error) {
-                error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                error.reason != undefined ? setMessage("Error : " + (error.reason.includes("execution reverted:") ? error.reason.split("execution reverted:")[1] : error.reason)) :
                     error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                         : setMessage("Error : " + error.message);
             }
@@ -259,6 +260,26 @@ function FundingPage() {
                                     {!viewCreateVotingEventForm ? 'Create Voting Event' : 'Hide Create Voting Event Form'}</Button>
                                 <br /><br />
                                 {viewCreateVotingEventForm ? <>
+                                    <Form>
+                                        <div className="mb-3">
+                                            <Form.Check
+                                                inline
+                                                label="Voting Event"
+                                                name="group1"
+                                                type='radio'
+                                                checked={!viewRefund}
+                                                onClick={() => setViewRefund(false)}
+                                            />
+                                            <Form.Check
+                                                inline
+                                                label="Refund Event"
+                                                name="group1"
+                                                type='radio'
+                                                checked={viewRefund}
+                                                onClick={() => setViewRefund(true)}
+                                            />
+                                        </div>
+                                    </Form>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text>Voting Event Title</InputGroup.Text>
                                         <Form.Control
@@ -277,43 +298,45 @@ function FundingPage() {
                                             onChange={LoadVotingEventDetails}
                                         />
                                     </InputGroup>
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Text>Destination Wallet Address</InputGroup.Text>
-                                        <Form.Control
-                                            id='3'
-                                            placeholder="Enter Wallet Address"
-                                            aria-describedby="basic-addon2"
-                                            onChange={LoadVotingEventDetails}
-                                        />
-                                    </InputGroup>
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Text>ether</InputGroup.Text>
-                                        <Form.Control
-                                            id='4'
-                                            placeholder="Enter how much ether you want to send"
-                                            aria-describedby="basic-addon2"
-                                            onChange={LoadVotingEventDetails}
-                                            type="number"
-                                        />
-                                    </InputGroup>
-                                    <div className='d-flex justify-content-between'>
-                                    <Button 
-                                        variant="primary" 
-                                        type="submit" 
-                                        disabled={createVotingEventButtonStatus} 
-                                        onClick={CreateVotingEvent}>
+                                    {!viewRefund ?
+                                        <>
+                                            <InputGroup className="mb-3">
+                                                <InputGroup.Text>Destination Wallet Address</InputGroup.Text>
+                                                <Form.Control
+                                                    id='3'
+                                                    placeholder="Enter Wallet Address"
+                                                    aria-describedby="basic-addon2"
+                                                    onChange={LoadVotingEventDetails}
+                                                />
+                                            </InputGroup>
+                                            <InputGroup className="mb-3">
+                                                <InputGroup.Text>ether</InputGroup.Text>
+                                                <Form.Control
+                                                    id='4'
+                                                    placeholder="Enter how much ether you want to send"
+                                                    aria-describedby="basic-addon2"
+                                                    onChange={LoadVotingEventDetails}
+                                                    type="number"
+                                                />
+                                            </InputGroup>
+                                        </> : <></>}
+                                    {!viewRefund ?
+                                        <Button
+                                            variant="primary"
+                                            type="submit"
+                                            disabled={createVotingEventButtonStatus}
+                                            onClick={CreateVotingEvent}>
                                             Create Voting Event
-                                    </Button>
-                                    &nbsp;
-                                    <Button 
-                                        variant="danger" 
-                                        type="submit"
-                                        id="refund"
-                                        disabled={createVotingEventButtonStatus} 
-                                        onClick={CreateVotingEvent}>
+                                        </Button> :<></>}
+                                    {viewRefund ?
+                                        <Button
+                                            variant="danger"
+                                            type="submit"
+                                            id="refund"
+                                            disabled={createVotingEventButtonStatus}
+                                            onClick={CreateVotingEvent}>
                                             Create Refund Event
-                                    </Button>
-                                    </div>
+                                        </Button> : <></>}
                                     <br /><br />
                                 </> : <></>}
 
@@ -370,7 +393,7 @@ function FundingPage() {
                                         <tr key={index}
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => LoadVotingPage(index)}>
-                                            <td>{item.title}{item.refund_event ? <span style={{ color: 'red'}}><b> (refund event)</b></span>: " "}</td>
+                                            <td>{item.title}{item.refund_event ? <span style={{ color: 'red' }}><b> (refund event)</b></span> : " "}</td>
                                             <td>{item.destination_wallet_address}</td>
                                             <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
                                             <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>

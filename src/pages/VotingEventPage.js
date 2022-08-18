@@ -190,7 +190,7 @@ function VotingEventPage() {
                         </Button>
                     </Card.Header>
                     <ListGroup variant="flush">
-                        <ListGroup.Item><b>Destination Wallet Address</b>: {votingEventDetails.destination_wallet_address}</ListGroup.Item>
+                        <ListGroup.Item><b>Destination Wallet Address</b>: { votingEventDetails.refund_event ? <span style={{ color: 'red'}}><b>Refund All Contributors</b></span> : votingEventDetails.destination_wallet_address}</ListGroup.Item>
                         <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}</ListGroup.Item>
                         <ListGroup.Item><b>Voting Event Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
