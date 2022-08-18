@@ -10,8 +10,14 @@ import { Rating } from 'react-simple-star-rating';
 function VotingEventPage() {
 
     const [cookies, setCookie] = useCookies();
-    const [fundingcontract, setfundingcontract] = useState(FundingContract(cookies.EventAddress));
-    const [fundingcontractethers, setfundingcontractethers] = useState(FundingContractEthers(cookies.EventAddress));
+    if(window.location.search != ""){
+        var params = new URLSearchParams(window.location.search)
+        setCookie('FundAddress', params.get('FundAddress'), { path: '/' });
+        setCookie('VotingIndex', params.get('VotingIndex'), { path: '/' });
+        window.location.href = "/vote";
+    }
+    const [fundingcontract, setfundingcontract] = useState(FundingContract(cookies.FundAddress));
+    const [fundingcontractethers, setfundingcontractethers] = useState(FundingContractEthers(cookies.FundAddress));
 
     const [fundDetails, setFundDetails] = useState({});
     const [votingEventDetails, setVotingEventDetails] = useState({});
@@ -153,7 +159,7 @@ function VotingEventPage() {
                 <Card>
                     <Card.Header><b>Fund Details</b></Card.Header>
                     <ListGroup variant="flush">
-                        <ListGroup.Item><b>Fund Address</b>: {cookies.EventAddress}</ListGroup.Item>
+                        <ListGroup.Item><b>Fund Address</b>: {cookies.FundAddress}</ListGroup.Item>
                         <ListGroup.Item><b>Manager Address</b>: {fundDetails[2]}</ListGroup.Item>
                         <ListGroup.Item><b>Fund Balance</b>: {Web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " eth"}</ListGroup.Item>
                         <ListGroup.Item><b>Contributors Info</b>: {fundDetails[4]?.length + ' contributors have ' + fundDetails[5] + ' votes.'}</ListGroup.Item>

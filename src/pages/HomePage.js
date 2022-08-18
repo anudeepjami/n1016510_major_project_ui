@@ -23,7 +23,7 @@ function HomePage() {
   }, []);
 
   var LoadFundingPage = async (item) => {
-    setCookie('EventAddress', item.crowdfunding_event_address, { path: '/' });
+    setCookie('FundAddress', item.crowdfunding_event_address, { path: '/' });
     setCookie('VotingIndex', "99" , { path: '/' });
     window.location.href = "/fund";
   }

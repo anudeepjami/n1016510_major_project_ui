@@ -38,3 +38,24 @@ export async function UpdateWalletDetails(wallet_details){
         return { message: e.message };
     }
 }
+
+export async function SendEmail(fundDetails, votingEventDetails,fundAddress,votingIndex){
+    try {
+        var response = await axios
+            .request({
+                baseURL: baseURL,
+                method: 'POST',
+                url: "/v1/sendemail",
+                data: {
+                    fundDetails: fundDetails,
+                    votingEventDetails: votingEventDetails,
+                    fundAddress: fundAddress,
+                    votingIndex: votingIndex
+                }
+            });
+        return response.data;
+    }
+    catch (e) {
+        return { message: e.message };
+    }
+}

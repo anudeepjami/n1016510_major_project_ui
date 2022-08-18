@@ -6,12 +6,13 @@ import { Card, Table, Button, Form, InputGroup, Modal } from 'react-bootstrap';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Rating } from 'react-simple-star-rating';
+import { SendEmail } from '../components/CrowdfundingApi.js';
 
 
 function FundingPage() {
     const [cookies, setCookie] = useCookies();
-    const [fundingcontract, setfundingcontract] = useState(FundingContract(cookies.EventAddress));
-    const [fundingcontractethers, setfundingcontractethers] = useState(FundingContractEthers(cookies.EventAddress));
+    const [fundingcontract, setfundingcontract] = useState(FundingContract(cookies.FundAddress));
+    const [fundingcontractethers, setfundingcontractethers] = useState(FundingContractEthers(cookies.FundAddress));
     const [fundDetails, setFundDetails] = useState({});
     const [votingEventDetails, setVotingEventDetails] = useState([]);
     const [discussionFormList, setDiscussionFormList] = useState([]);
@@ -110,7 +111,9 @@ function FundingPage() {
                     createVotingEventDetails.destination_address,
                     Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
             await temp.wait();
-            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
+            var temp2 = await fundingcontract.methods.GetVotingEvents().call();
+            await SendEmail(fundDetails,temp2[temp2.length - 1],cookies.FundAddress,temp2.length - 1);
+            setMessage("Voting event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason) : setMessage("Error : " + error.message);
@@ -157,7 +160,7 @@ function FundingPage() {
             <div style={{ width: "60%", margin: "0 auto" }}>
                 <h1 className="text-center" >{fundDetails[0]}</h1>
                 <h3 className="text-center" >{fundDetails[1]}</h3>
-                <h5> Fund Details: (Fund Address : {cookies.EventAddress})</h5>
+                <h5> Fund Details: (Fund Address : {cookies.FundAddress})</h5>
                 <Card>
                     <Card.Header as="h4">Fund Manager Details</Card.Header>
                     <Card.Body>
