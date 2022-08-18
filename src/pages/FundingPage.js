@@ -119,7 +119,8 @@ function FundingPage() {
                     createVotingEventDetails.title,
                     createVotingEventDetails.description,
                     createVotingEventDetails.destination_address,
-                    Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
+                    Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'),
+                    0)
             await temp.wait();
             var temp2 = await fundingcontract.methods.GetVotingEvents().call();
             await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
