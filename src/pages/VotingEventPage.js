@@ -74,13 +74,17 @@ function VotingEventPage() {
         });
         const temp2 = await fundingcontract.methods.GetCrowdfundingDiscussionForum().call();
         var discussionsList = [];
+        var total_rating = 0;
         temp2.forEach((item) => {
-            if (item.index == cookies.VotingIndex)
+            if (item.index == cookies.VotingIndex) {
+                total_rating = total_rating + parseInt(item.rating)
                 discussionsList.push({
                     comment: item.comment,
                     comment_address: item.comment_address,
-                    rating: item.rating
+                    rating: item.rating,
+                    total_rating: total_rating
                 });
+            }
         });
         setDiscussionFormList(discussionsList);
         setVoteDivision(tempVoteDivision);
@@ -235,25 +239,34 @@ function VotingEventPage() {
             <div>
                     <br />
                     <Card>
-                        <Card.Header><h4>Discussion Form for Voting Event</h4></Card.Header>
+                        <Card.Header>
+                            <div className='d-flex justify-content-between'>
+                                <h4>Discussion Form for Voting Event</h4>
+                                <div>
+                                    <span>Overall Rating: </span>
+                                    <Rating
+                                        ratingValue={discussionFormList[discussionFormList.length - 1]?.total_rating / discussionFormList.length}
+                                        readonly={true}
+                                        size={40}
+                                    >
+                                    </Rating>
+                                </div>
+                            </div>
+                        </Card.Header>
                         <br />
                         {discussionFormList.map((item, index) => {
                             return (
                                 <div key={index}>
                                     <Card style={{ width: "90%", margin: "0 auto" }}>
                                         <Card.Header>
-                                            <div className='d-flex'>
-                                                <div className='m1' style={{ width: "60%" }}>
-                                                    <b>User: {item.comment_address}</b>
-                                                </div>
-                                                <div className='m1' style={{ width: '40%' }}>
-                                                    <Rating
-                                                        ratingValue={parseInt(item.rating)}
-                                                        readonly={true}
-                                                        size={30}
-                                                    >
-                                                    </Rating>
-                                                </div>
+                                            <div className='d-flex justify-content-between'>
+                                                <b>User: {item.comment_address}</b>
+                                                <Rating
+                                                    ratingValue={parseInt(item.rating)}
+                                                    readonly={true}
+                                                    size={30}
+                                                >
+                                                </Rating>
                                             </div>
                                         </Card.Header>
                                         <Card.Body>

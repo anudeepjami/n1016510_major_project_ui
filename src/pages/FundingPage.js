@@ -43,6 +43,10 @@ function FundingPage() {
     useEffect(() => {
         (async () => {
             await LoadFundDetails();
+            if (cookies.VotingIndex != "99") {
+                setCookie('VotingIndex', "99", { path: '/' });
+                window.location.href = "/fund";
+            }
         })();
     }, []);
 
@@ -51,13 +55,17 @@ function FundingPage() {
         setVotingEventDetails(await fundingcontract.methods.GetVotingEvents().call());
         const temp = await fundingcontract.methods.GetCrowdfundingDiscussionForum().call();
         var discussionsList = [];
+        var total_rating = 0;
         temp.forEach((item) => {
-            if (item.index == cookies.VotingIndex)
+            if (item.index == cookies.VotingIndex) {
+                total_rating = total_rating + parseInt(item.rating)
                 discussionsList.push({
                     comment: item.comment,
                     comment_address: item.comment_address,
-                    rating: item.rating
+                    rating: item.rating,
+                    total_rating: total_rating
                 });
+            }
         });
         setDiscussionFormList(discussionsList);
     }
@@ -112,7 +120,7 @@ function FundingPage() {
                     Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'))
             await temp.wait();
             var temp2 = await fundingcontract.methods.GetVotingEvents().call();
-            await SendEmail(fundDetails,temp2[temp2.length - 1],cookies.FundAddress,temp2.length - 1);
+            await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
             setMessage("Voting event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a>");
         }
         catch (error) {
@@ -355,25 +363,34 @@ function FundingPage() {
                 <div>
                     <br />
                     <Card>
-                        <Card.Header><h4>Discussion Form for Fund</h4></Card.Header>
+                        <Card.Header>
+                            <div className='d-flex justify-content-between'>
+                                <h4>Discussion Form for Fund</h4>
+                                <div>
+                                    <span>Overall Rating: </span>
+                                    <Rating
+                                        ratingValue={discussionFormList[discussionFormList.length - 1]?.total_rating / discussionFormList.length}
+                                        readonly={true}
+                                        size={40}
+                                    >
+                                    </Rating>
+                                </div>
+                            </div>
+                        </Card.Header>
                         <br />
                         {discussionFormList.map((item, index) => {
                             return (
                                 <div key={index}>
                                     <Card style={{ width: "90%", margin: "0 auto" }}>
                                         <Card.Header>
-                                            <div className='d-flex'>
-                                                <div className='m1' style={{ width: "60%" }}>
-                                                    <b>User: {item.comment_address}</b>
-                                                </div>
-                                                <div className='m1' style={{ width: '40%' }}>
-                                                    <Rating
-                                                        ratingValue={parseInt(item.rating)}
-                                                        readonly={true}
-                                                        size={30}
-                                                    >
-                                                    </Rating>
-                                                </div>
+                                            <div className='d-flex justify-content-between'>
+                                                <b>User: {item.comment_address}</b>
+                                                <Rating
+                                                    ratingValue={parseInt(item.rating)}
+                                                    readonly={true}
+                                                    size={30}
+                                                >
+                                                </Rating>
                                             </div>
                                         </Card.Header>
                                         <Card.Body>
