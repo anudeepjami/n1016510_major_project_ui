@@ -318,7 +318,8 @@ function VotingEventPage() {
                     onHide={async () => {
                         setPopup(false);
                     }}
-                    size="lg">
+                    size="lg"
+                    centered>
                     <Modal.Header closeButton>
                         <Modal.Title>AJ Crowdfunding Platform Message Popup</Modal.Title>
                     </Modal.Header>

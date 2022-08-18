@@ -86,7 +86,7 @@ function CreateFundingEventPage() {
           </Button>
         </Form>
       </div>
-      <Modal show={popup} onHide={PopupHandler} size="lg">
+      <Modal show={popup} onHide={PopupHandler} size="lg" centered>
         <Modal.Header closeButton>
           <Modal.Title>AJ Crowdfunding Platform Message Popup</Modal.Title>
         </Modal.Header>
