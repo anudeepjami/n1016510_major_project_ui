@@ -102,7 +102,7 @@ function FundingPage() {
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
-                error.data.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                     : setMessage("Error : " + error.message);
         }
         setCreateVotingEventButtonStatus(false);
@@ -128,7 +128,7 @@ function FundingPage() {
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
-                error.data.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                     : setMessage("Error : " + error.message);
         }
         setContributeButtonStatus(false);
@@ -155,7 +155,7 @@ function FundingPage() {
             }
             catch (error) {
                 error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
-                    error.data.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                    error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                         : setMessage("Error : " + error.message);
             }
             setCommentButton(false);
