@@ -42,7 +42,7 @@ function CreateFundingEventPage() {
   var CreateCrowdfundingEvent = async () => {
     setButtonStatus(true);
     try {
-      setMessage("Crowdfunding campaign act creation in progress .... !!!!");
+      setMessage("Crowdfunding campaign creation in progress .... !!!!");
       setPopup(true);
       const temp = await maincontractethers
         .CreateCrowdfundingEvent(

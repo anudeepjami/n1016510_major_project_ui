@@ -32,7 +32,7 @@ function App() {
     <div>
       <Navbar bg="dark">
         <Container>
-          <Navbar.Brand href="/"><img width="200" height="100" src={require('./images/companylogo.png')} /></Navbar.Brand>
+          <Navbar.Brand href="/"><img width="400" height="100" src={require('./images/companylogo.png')} /></Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link style={{ color: "white" }} href="/">Home</Nav.Link>
             <Nav.Link style={{ color: "white" }} href="/user">User</Nav.Link>
