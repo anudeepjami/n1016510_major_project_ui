@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
-import { MainContractEthers } from '../components/ethereum_connectors/MainContractEthers.js';
+import { MainContractEthers } from '../components/ethereum_connectors/MainContract.js';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 

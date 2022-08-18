@@ -1,4 +1,6 @@
 import web3 from "./web3";
+import signer from "./ethers";
+import { ethers } from "ethers";
 import CrowdfundingEventsContract from "../ethereum_contracts/CrowdfundingEvents.json"
 
 const crowdfundingEventContract = {
@@ -13,5 +15,13 @@ export function FundingContract(EventAddress){
         crowdfundingEventContract.interface, 
         EventAddress, 
         {handleRevert: true}
+    );
+}
+
+export function FundingContractEthers(EventAddress){
+    return new ethers.Contract(
+        EventAddress,
+        crowdfundingEventContract.interface,
+        signer
     );
 }

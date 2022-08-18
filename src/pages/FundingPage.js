@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { FundingContract } from '../components/ethereum_connectors/FundingContract.js';
-import { FundingContractEthers } from '../components/ethereum_connectors/FundingContractEthers.js';
+import { FundingContract, FundingContractEthers } from '../components/ethereum_connectors/FundingContract.js';
 import { Card, Table, Button, Form, InputGroup, Modal } from 'react-bootstrap';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
