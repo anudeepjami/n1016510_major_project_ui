@@ -100,7 +100,7 @@ function VotingEventPage() {
             const temp = await fundingcontractethers
                 .VoteForVotingEvent(cookies.VotingIndex, vote);
             await temp.wait();
-            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            setMessage("Vote recorded successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -119,7 +119,7 @@ function VotingEventPage() {
             const temp = await fundingcontractethers
                 .CompleteVotingEvent(cookies.VotingIndex);
             await temp.wait();
-            setMessage("Voting event creation success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            setMessage("Polling closed successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -178,7 +178,7 @@ function VotingEventPage() {
                 <br />
                 <Card>
                     <Card.Header>
-                        <b>Voting Details</b>
+                        <b>Voting Details {votingEventDetails.refund_event ? <span style={{ color: 'red'}}><b> (refund event)</b></span>: " "}</b>
                         <Button
                             variant="primary"
                             type="submit"
@@ -195,7 +195,6 @@ function VotingEventPage() {
                         <ListGroup.Item><b>Voting Event Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
                                 {!votingEventDetails.event_completion_status ? 'In Progress' : votingEventDetails.event_success_status ? 'Successful' : "Failed"}
-                                {/* { votingEventDetails.} */}
                             </ins>
                         </ListGroup.Item>
                         <ListGroup.Item>

@@ -109,7 +109,7 @@ function FundingPage() {
         await LoadFundDetails();
     }
 
-    var CreateVotingEvent = async () => {
+    var CreateVotingEvent = async (e) => {
         setContributeButtonStatus(true);
         try {
             setMessage("Voting event creation in progress .... !!!!");
@@ -120,7 +120,7 @@ function FundingPage() {
                     createVotingEventDetails.description,
                     createVotingEventDetails.destination_address,
                     Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'),
-                    0)
+                    e.target.id == "refund" ? 1: 0)
             await temp.wait();
             var temp2 = await fundingcontract.methods.GetVotingEvents().call();
             await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
@@ -296,7 +296,24 @@ function FundingPage() {
                                             type="number"
                                         />
                                     </InputGroup>
-                                    <Button variant="primary" type="submit" disabled={createVotingEventButtonStatus} onClick={CreateVotingEvent}>Create Voting Event</Button>
+                                    <div className='d-flex justify-content-between'>
+                                    <Button 
+                                        variant="primary" 
+                                        type="submit" 
+                                        disabled={createVotingEventButtonStatus} 
+                                        onClick={CreateVotingEvent}>
+                                            Create Voting Event
+                                    </Button>
+                                    &nbsp;
+                                    <Button 
+                                        variant="danger" 
+                                        type="submit"
+                                        id="refund"
+                                        disabled={createVotingEventButtonStatus} 
+                                        onClick={CreateVotingEvent}>
+                                            Create Refund Event
+                                    </Button>
+                                    </div>
                                     <br /><br />
                                 </> : <></>}
 
@@ -353,7 +370,7 @@ function FundingPage() {
                                         <tr key={index}
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => LoadVotingPage(index)}>
-                                            <td>{item.title}</td>
+                                            <td>{item.title}{item.refund_event ? <span style={{ color: 'red'}}><b> (refund event)</b></span>: " "}</td>
                                             <td>{item.destination_wallet_address}</td>
                                             <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
                                             <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
