@@ -183,18 +183,18 @@ function FundingPage() {
                     <Card.Body>
                         <Card.Title>{fundDetails[2]}</Card.Title>
                         <Card.Text>
-                            This is the wallet address of the fund manager who created this funding event.
+                            This is the wallet address of the fund manager who created this fundraiser.
                         </Card.Text>
                     </Card.Body>
                 </Card>
                 <br />
                 <div className='d-flex'>
                     <Card className='m-1'>
-                        <Card.Header as="h4">Fund Minimum Contribution</Card.Header>
+                        <Card.Header as="h4">Minimum Contribution</Card.Header>
                         <Card.Body>
                             <Card.Title>{Web3.utils.fromWei(fundDetails[3] == undefined ? '0' : fundDetails[3].toString(), 'ether') + " eth"}</Card.Title>
                             <Card.Text>
-                                Deposits should be made equal to or in multiples of the minimum set for this fund.
+                                Deposits should be made equal to or in multiples of the minimum amount set for this fund.
                                 <br /><br />
                                 <Button variant="primary" type="submit" onClick={() => { setViewContributeButton(!viewContributeButton) }}>
                                     {!viewContributeButton ? 'Contribute' : 'Hide Contribution Form'}</Button>
@@ -215,7 +215,7 @@ function FundingPage() {
                         </Card.Body>
                     </Card >
                     <Card className='m-1'>
-                        <Card.Header as="h4">Fund Wallet Balance</Card.Header>
+                        <Card.Header as="h4">Fund Balance</Card.Header>
                         <Card.Body>
                             <Card.Title>{Web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " eth"}</Card.Title>
                             <Card.Text>
@@ -246,11 +246,11 @@ function FundingPage() {
                         </Card.Body>
                     </Card>
                     <Card className='m-1' style={{ width: '50%' }}>
-                        <Card.Header as="h4">Voting Events</Card.Header>
+                        <Card.Header as="h4">Voting/Refund Events</Card.Header>
                         <Card.Body>
                             <Card.Title>{fundDetails[7]}</Card.Title>
                             <Card.Text>
-                                Voting events present in this fund.
+                                Voting/refund events present in this fund.
                                 <br /><br />
                                 <Button
                                     variant="primary"
@@ -258,7 +258,7 @@ function FundingPage() {
                                     onClick={() => {
                                         setViewCreateVotingEventForm(!viewCreateVotingEventForm)
                                     }}>
-                                    {!viewCreateVotingEventForm ? 'Create Voting Event' : 'Hide Create Voting Event Form'}</Button>
+                                    {!viewCreateVotingEventForm ? 'Create Voting/Refund Event' : 'Hide Create Voting/Refund Event Form'}</Button>
                                 <br /><br />
                                 {viewCreateVotingEventForm ? <>
                                     <Form>
@@ -282,7 +282,7 @@ function FundingPage() {
                                         </div>
                                     </Form>
                                     <InputGroup className="mb-3">
-                                        <InputGroup.Text>Voting Event Title</InputGroup.Text>
+                                        <InputGroup.Text>{!viewRefund ? "Voting" : "Refund"} Event Title</InputGroup.Text>
                                         <Form.Control
                                             id='1'
                                             placeholder="Enter Title"
@@ -291,7 +291,7 @@ function FundingPage() {
                                         />
                                     </InputGroup>
                                     <InputGroup className="mb-3">
-                                        <InputGroup.Text>Voting Event Description</InputGroup.Text>
+                                        <InputGroup.Text>{!viewRefund ? "Voting" : "Refund"} Event Description</InputGroup.Text>
                                         <Form.Control
                                             id='2'
                                             placeholder="Enter Descrption"
@@ -348,7 +348,7 @@ function FundingPage() {
                                         setViewVotingEventsTable(!viewVotingEventsTable)
                                         setViewContributorsTable(false)
                                     }}>
-                                    {!viewVotingEventsTable ? 'View' : 'Hide'} Voting Events</Button>
+                                    {!viewVotingEventsTable ? 'View' : 'Hide'} Voting/Refund Events</Button>
                                 <br /><br />
                             </Card.Text>
                         </Card.Body>
@@ -395,7 +395,7 @@ function FundingPage() {
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => LoadVotingPage(index)}>
                                             <td>{item.title}{item.refund_event ? <span style={{ color: 'red' }}><b> (refund event)</b></span> : " "}</td>
-                                            <td>{item.destination_wallet_address}</td>
+                                            <td>{ !item.refund_event ? item.destination_wallet_address : "All contributors of this fundraiser"}</td>
                                             <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
                                             <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
                                                 {

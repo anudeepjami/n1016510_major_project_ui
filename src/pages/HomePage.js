@@ -33,7 +33,7 @@ function HomePage() {
     <div>
       <div style={{ width: "50%", margin: "0 auto" }}>
         <h1 className="text-center">Crowdfunding Campaigns</h1>
-        <h3 style={{ textAlign: 'right' }}>(total events: {crowdfundingEvents.length})</h3>
+        <h3 style={{ textAlign: 'right' }}>(total Campaigns: {crowdfundingEvents.length})</h3>
         {crowdfundingEvents.map((item, index) => {
           return (
             <div key={index}>
@@ -41,7 +41,7 @@ function HomePage() {
               className="text-center" 
               style={{cursor: 'pointer'}}
               onClick={()=> LoadFundingPage(item)}>
-                <Card.Header className="text-muted"> <b>Block Chain Address of crowdfunding event: {item.crowdfunding_event_address}</b></Card.Header>
+                <Card.Header className="text-muted"> <b>Fundraiser Address on the Blockchain: {item.crowdfunding_event_address}</b></Card.Header>
                 <Card.Body>
                   <Card.Title><b>{item.crowdfunding_event_title}</b></Card.Title>
                   <Card.Text>
@@ -49,7 +49,7 @@ function HomePage() {
                     minimum contribution required : {Web3.utils.fromWei(item.crowdfunding_event_min_deposit.toString(), 'ether') + " eth"}
                   </Card.Text>
                 </Card.Body>
-                <Card.Footer className="text-muted"><b>fund manager: {item.crowdfunding_event_manager_address}</b></Card.Footer>
+                <Card.Footer className="text-muted"><b>Fund Manager Address: {item.crowdfunding_event_manager_address}</b></Card.Footer>
               </Card>
               <br />
             </div>

@@ -38,7 +38,7 @@ function App() {
         <Container className="d-flex justify-content-between">
           <Navbar.Brand href="/"><img width="400" height="100" src={require('./images/companylogo.png')} /></Navbar.Brand>
           <Nav>
-            <Nav.Link href="/create"><Button variant="primary">Create a Crowdfunding Campaign</Button></Nav.Link>
+            <Nav.Link href="/create"><Button variant="primary">Create a Fundraiser</Button></Nav.Link>
             <Nav.Link style={{ color: "white" }} href="/user"><Button variant="primary">Profile</Button></Nav.Link>
           </Nav>
           <Nav>
