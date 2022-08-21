@@ -36,6 +36,8 @@ function VotingEventPage() {
     const [rating, setRating] = useState(0);
     const [commentButton, setCommentButton] = useState(false);
 
+    const [claimRefundButton, setClaimRefundButton] = useState("false");
+
     //this is used for loading state components on page load
     useEffect(() => {
         (async () => {
@@ -44,6 +46,7 @@ function VotingEventPage() {
     }, []);
 
     var LoadVotingDetails = async () => {
+        setClaimRefundButton(await fundingcontract.methods.refund_event_success().call());
         const temp = await fundingcontract.methods.GetCrowdfundingEventDetails().call();
         setFundDetails(temp);
         const temp1 = await fundingcontract.methods.GetVotingEvents().call();
@@ -160,6 +163,22 @@ function VotingEventPage() {
         }
     }
 
+    var ClaimRefund = async (e) => {
+        try {
+            setMessage("Refund Claim in progress .... !!!!");
+            setPopup(true);
+            const temp = await fundingcontractethers.ClaimRefund();
+            await temp.wait();
+            setMessage("Refund Claimed successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+        }
+        catch (error) {
+            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                    : setMessage("Error : " + error.message);
+        }
+        await LoadVotingDetails();
+    }
+
 
     return (
         <>
@@ -178,19 +197,32 @@ function VotingEventPage() {
                 <br />
                 <Card>
                     <Card.Header>
-                        <b>Voting Details {votingEventDetails.refund_event ? <span style={{ color: 'red'}}><b> (refund event)</b></span>: " "}</b>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            disabled={pollingButton}
-                            onClick={ClosePolling}
-                            style={{ float: 'right' }}
-                        >
-                            Finish Voting Event
-                        </Button>
+                        <div class="d-flex justify-content-between">
+                            <b>Voting Details {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b> (refund event)</b></span> : " "}</b>
+                            {claimRefundButton ?
+                                <Button
+                                    variant="success"
+                                    type="submit"
+                                    disabled={!claimRefundButton}
+                                    onClick={ClaimRefund}
+                                >
+                                    Claim Refund
+                                </Button> : <></>
+                            }
+                            {!claimRefundButton ?
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    disabled={pollingButton}
+                                    onClick={ClosePolling}
+                                >
+                                    Finish Voting Event
+                                </Button> : <></>
+                            }
+                        </div>
                     </Card.Header>
                     <ListGroup variant="flush">
-                        <ListGroup.Item><b>Destination Wallet Address</b>: { votingEventDetails.refund_event ? <span style={{ color: 'red'}}><b>Refund All Contributors</b></span> : votingEventDetails.destination_wallet_address}</ListGroup.Item>
+                        <ListGroup.Item><b>Destination Wallet Address</b>: {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b>Refund All Contributors</b></span> : votingEventDetails.destination_wallet_address}</ListGroup.Item>
                         <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}</ListGroup.Item>
                         <ListGroup.Item><b>Voting Event Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
