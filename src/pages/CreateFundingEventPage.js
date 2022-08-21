@@ -68,10 +68,6 @@ function CreateFundingEventPage() {
   return (
     <>
       <div style={{ width: "50%", margin: "0 auto" }} >
-        <Button variant="link"
-          onClick={() => window.location.href = "/"}>
-          {'<- '}Go Back
-        </Button>
         <h1>Create a CrowdFunding Campaign</h1>
         <Form>
           <Form.Group className="mb-4">

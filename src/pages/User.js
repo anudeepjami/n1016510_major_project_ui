@@ -40,10 +40,6 @@ function User() {
 
     return (
         <div style={{ width: "60%", margin: "0 auto" }}>
-            <Button variant="link"
-                onClick={() => window.location.href = "/"}>
-                {'<- '}Go Back
-            </Button>
             <br />
             <Card>
                 <Card.Header className="text-center">User Form</Card.Header>
