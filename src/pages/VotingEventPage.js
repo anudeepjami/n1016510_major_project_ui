@@ -5,6 +5,7 @@ import { Card, ListGroup, Button, Table, Modal, Form } from 'react-bootstrap';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Rating } from 'react-simple-star-rating';
+import {SendRefundEmail} from '../components/CrowdfundingApi.js';
 
 function VotingEventPage() {
 
@@ -122,7 +123,14 @@ function VotingEventPage() {
             const temp = await fundingcontractethers
                 .CompleteVotingEvent(cookies.VotingIndex);
             await temp.wait();
-            setMessage("Polling closed successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            var refund_success = await fundingcontract.methods.refund_event_success().call();
+            if(refund_success)
+            {
+                var temp2 = await fundingcontract.methods.GetVotingEvents().call();
+                await SendRefundEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
+            }
+            var refund_msg = refund_success ? " and claim refund emails are sent to contributors" : " ";
+            setMessage("Polling closed successfully"+ refund_msg +"...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -149,7 +157,7 @@ function VotingEventPage() {
                         comment,
                         rating)
                 await temp.wait();
-                setMessage("Comment submission success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                setMessage("Commented successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             catch (error) {
                 error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -165,11 +173,11 @@ function VotingEventPage() {
 
     var ClaimRefund = async (e) => {
         try {
-            setMessage("Refund Claim in progress .... !!!!");
+            setMessage("Refund in progress .... !!!!");
             setPopup(true);
             const temp = await fundingcontractethers.ClaimRefund();
             await temp.wait();
-            setMessage("Refund Claimed successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            setMessage("Refunded successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
