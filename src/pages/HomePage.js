@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { MainContract } from '../components/ethereum_connectors/MainContract.js';
 import { Card } from 'react-bootstrap';
 import Web3 from 'web3';
-import {useCookies} from 'react-cookie'
+import { useCookies } from 'react-cookie'
 
 function HomePage() {
 
-  
+
   const [cookies, setCookie] = useCookies();
   const [maincontract, setMaincontract] = useState(MainContract());
   const [crowdfundingEvents, setCrowdfundingEvents] = useState([]);
@@ -17,7 +17,7 @@ function HomePage() {
       const temp = await maincontract.methods.GetCrowdfundingEvents().call();
       var temp_reverse = [];
       for (let i = temp.length; i > 0; i--) {
-        temp_reverse.push(temp[i-1]);
+        temp_reverse.push(temp[i - 1]);
       }
       setCrowdfundingEvents(temp_reverse);
     })();
@@ -25,7 +25,7 @@ function HomePage() {
 
   var LoadFundingPage = async (item) => {
     setCookie('FundAddress', item.crowdfunding_event_address, { path: '/' });
-    setCookie('VotingIndex', "99" , { path: '/' });
+    setCookie('VotingIndex', "99", { path: '/' });
     window.location.href = "/fund";
   }
 
@@ -37,10 +37,10 @@ function HomePage() {
         {crowdfundingEvents.map((item, index) => {
           return (
             <div key={index}>
-              <Card 
-              className="text-center" 
-              style={{cursor: 'pointer'}}
-              onClick={()=> LoadFundingPage(item)}>
+              <Card
+                className="text-center"
+                style={{ cursor: 'pointer' }}
+                onClick={() => LoadFundingPage(item)}>
                 <Card.Header className="text-muted"> <b>Fundraiser Address on the Blockchain: {item.crowdfunding_event_address}</b></Card.Header>
                 <Card.Body>
                   <Card.Title><b>{item.crowdfunding_event_title}</b></Card.Title>

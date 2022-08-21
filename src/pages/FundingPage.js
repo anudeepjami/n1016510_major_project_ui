@@ -175,6 +175,10 @@ function FundingPage() {
     return (
         <>
             <div style={{ width: "60%", margin: "0 auto" }}>
+                <Button variant="link"
+                    onClick={() => window.location.href = "/"}>
+                    {'<- '}Go Back
+                </Button>
                 <h1 className="text-center" >{fundDetails[0]}</h1>
                 <h3 className="text-center" >{fundDetails[1]}</h3>
                 <h5> Fund Details: (Fund Address : {cookies.FundAddress})</h5>
@@ -328,7 +332,7 @@ function FundingPage() {
                                             disabled={createVotingEventButtonStatus}
                                             onClick={CreateVotingEvent}>
                                             Create Voting Event
-                                        </Button> :<></>}
+                                        </Button> : <></>}
                                     {viewRefund ?
                                         <Button
                                             variant="danger"
@@ -395,7 +399,7 @@ function FundingPage() {
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => LoadVotingPage(index)}>
                                             <td>{item.title}{item.refund_event ? <span style={{ color: 'red' }}><b> (refund event)</b></span> : " "}</td>
-                                            <td>{ !item.refund_event ? item.destination_wallet_address : "All contributors of this fundraiser"}</td>
+                                            <td>{!item.refund_event ? item.destination_wallet_address : "All contributors of this fundraiser"}</td>
                                             <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
                                             <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
                                                 {

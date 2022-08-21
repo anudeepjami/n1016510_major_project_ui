@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const baseURL = window.location.href.includes("localhost") ? "http://localhost:8080" : "https://anudeepjami-crowdfunding-api.me";
 
-export async function GetWalletDetails(wallet_address){
+export async function GetWalletDetails(wallet_address) {
     try {
         var response = await axios
             .request({
@@ -21,7 +21,7 @@ export async function GetWalletDetails(wallet_address){
     }
 }
 
-export async function UpdateWalletDetails(wallet_details){
+export async function UpdateWalletDetails(wallet_details) {
     try {
         var response = await axios
             .request({
@@ -40,7 +40,7 @@ export async function UpdateWalletDetails(wallet_details){
     }
 }
 
-export async function SendEmail(fundDetails, votingEventDetails,fundAddress,votingIndex){
+export async function SendEmail(fundDetails, votingEventDetails, fundAddress, votingIndex) {
     try {
         var response = await axios
             .request({
@@ -61,7 +61,7 @@ export async function SendEmail(fundDetails, votingEventDetails,fundAddress,voti
     }
 }
 
-export async function SendRefundEmail(fundDetails, votingEventDetails,fundAddress,votingIndex){
+export async function SendRefundEmail(fundDetails, votingEventDetails, fundAddress, votingIndex) {
     try {
         var response = await axios
             .request({

@@ -11,25 +11,25 @@ import User from './pages/User';
 
 function App() {
 
-  const[cookies, setCookie] = useCookies();
+  const [cookies, setCookie] = useCookies();
 
   //this is used to detect metamask wallet address change
   useEffect(() => {
     if (typeof window.ethereum != "undefined") {
-    var RefreshPageOnMetmaskChange = async () => {
-      // Refresh page on meta mask account change
-      window.ethereum.on("accountsChanged", async (accounts) => {
-        setCookie('MetamaskLoggedInAddress', accounts[0], { path: '/' });
-        window.location.reload(true);
-      });
-      // Refresh page on meta mask network change
-      window.ethereum.on("chainChanged", async (chainId) => {
-        setCookie('MetamaskNetwork', chainId, { path: '/' });
-        window.location.reload(true);
-      });
+      var RefreshPageOnMetmaskChange = async () => {
+        // Refresh page on meta mask account change
+        window.ethereum.on("accountsChanged", async (accounts) => {
+          setCookie('MetamaskLoggedInAddress', accounts[0], { path: '/' });
+          window.location.reload(true);
+        });
+        // Refresh page on meta mask network change
+        window.ethereum.on("chainChanged", async (chainId) => {
+          setCookie('MetamaskNetwork', chainId, { path: '/' });
+          window.location.reload(true);
+        });
+      }
+      RefreshPageOnMetmaskChange();
     }
-    RefreshPageOnMetmaskChange();
-  }
   }, []);
 
   return (
@@ -46,8 +46,8 @@ function App() {
               <Card>
                 <Card.Header>
                   {cookies.MetamaskNetwork != undefined ? "Ethereum Network: " : ""}<b>
-                  {cookies.MetamaskNetwork == "0x4" ? "Rinkeby" :
-                    cookies.MetamaskNetwork == "0x1691" ? "Ganache Local" : "Only Rinkeby and local Ganache Supported"}</b>
+                    {cookies.MetamaskNetwork == "0x4" ? "Rinkeby" :
+                      cookies.MetamaskNetwork == "0x1691" ? "Ganache Local" : "Only Rinkeby and local Ganache Supported"}</b>
                 </Card.Header>
                 <ListGroup variant="flush">
                   <ListGroup.Item><b>

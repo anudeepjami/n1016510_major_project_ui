@@ -6,7 +6,7 @@ import { Card, ListGroup, Button, Table, Modal, Form } from 'react-bootstrap';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Rating } from 'react-simple-star-rating';
-import {SendRefundEmail} from '../components/CrowdfundingApi.js';
+import { SendRefundEmail } from '../components/CrowdfundingApi.js';
 
 function VotingEventPage() {
 
@@ -125,13 +125,12 @@ function VotingEventPage() {
                 .CompleteVotingEvent(cookies.VotingIndex);
             await temp.wait();
             var refund_success = await fundingcontract.methods.refund_event_success().call();
-            if(refund_success)
-            {
+            if (refund_success) {
                 var temp2 = await fundingcontract.methods.GetVotingEvents().call();
                 await SendRefundEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
             }
             var refund_msg = refund_success ? " and claim refund emails are sent to contributors" : " ";
-            setMessage("Polling closed successfully"+ refund_msg +"...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            setMessage("Polling closed successfully" + refund_msg + "...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -192,6 +191,10 @@ function VotingEventPage() {
     return (
         <>
             <div style={{ width: "60%", margin: "0 auto" }}>
+                <Button variant="link"
+                    onClick={() => window.location.href = "/fund"}>
+                    {'<- '}Go Back
+                </Button>
                 <h1 className="text-center" >{votingEventDetails?.title}</h1>
                 <h3 className="text-center" >{votingEventDetails?.body}</h3>
                 <Card>
@@ -232,7 +235,7 @@ function VotingEventPage() {
                     </Card.Header>
                     <ListGroup variant="flush">
                         <ListGroup.Item><b>Destination Wallet Address</b>: {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b>Refund All Contributors</b></span> : votingEventDetails.destination_wallet_address}</ListGroup.Item>
-                        <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}{votingEventDetails.refund_event ?" divided proportionally accross the contributors" : ""}</ListGroup.Item>
+                        <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}{votingEventDetails.refund_event ? " divided proportionally accross the contributors" : ""}</ListGroup.Item>
                         <ListGroup.Item><b>Voting Event Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
                                 {!votingEventDetails.event_completion_status ? 'In Progress' : votingEventDetails.event_success_status ? 'Successful' : "Failed"}
