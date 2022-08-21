@@ -1,3 +1,4 @@
+// Refer references from "React JS references.pdf" in root folder of this application
 import Web3 from "web3";
 
 

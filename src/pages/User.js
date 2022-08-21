@@ -1,3 +1,4 @@
+// Refer references from "React JS references.pdf" in root folder of this application
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Card, Button, InputGroup, Form } from 'react-bootstrap';

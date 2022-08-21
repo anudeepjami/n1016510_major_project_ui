@@ -1,3 +1,4 @@
+// Refer references from "React JS references.pdf" in root folder of this application
 import React, { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -6,7 +7,6 @@ import HomePage from './pages/HomePage';
 import CreateFundingEventPage from './pages/CreateFundingEventPage';
 import FundingPage from './pages/FundingPage';
 import VotingEventPage from './pages/VotingEventPage';
-import { ethers } from 'ethers';
 import User from './pages/User';
 
 function App() {

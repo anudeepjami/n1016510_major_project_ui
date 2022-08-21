@@ -1,3 +1,4 @@
+// Refer references from "React JS references.pdf" in root folder of this application
 import web3 from "./web3";
 import signer from "./ethers";
 import { ethers } from "ethers";

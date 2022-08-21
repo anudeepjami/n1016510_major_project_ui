@@ -1,3 +1,4 @@
+// Refer references from "React JS references.pdf" in root folder of this application
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

@@ -1,3 +1,4 @@
+// Refer references from "React JS references.pdf" in root folder of this application
 import React, { useState } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
 import { MainContractEthers } from '../components/ethereum_connectors/MainContract.js';

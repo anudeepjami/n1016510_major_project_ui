@@ -1,3 +1,4 @@
+// Refer references from "React JS references.pdf" in root folder of this application
 const axios = require('axios');
 
 const baseURL = window.location.href.includes("localhost") ? "http://localhost:8080" : "https://anudeepjami-crowdfunding-api.me";

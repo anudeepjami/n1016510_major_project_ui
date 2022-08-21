@@ -1,3 +1,4 @@
+// Refer references from "React JS references.pdf" in root folder of this application
 import React, { useState, useEffect } from 'react';
 import { MainContract } from '../components/ethereum_connectors/MainContract.js';
 import { Card } from 'react-bootstrap';
