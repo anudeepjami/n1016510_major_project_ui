@@ -98,7 +98,7 @@ function FundingPage() {
             const temp = await fundingcontractethers
                 .DepositToCrowdfundingEvent({ value: Web3.utils.toWei(depositAmount, 'ether') })
             await temp.wait();
-            setMessage("User contribution success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash
+            setMessage("contribution successful...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash
                 + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
@@ -144,7 +144,7 @@ function FundingPage() {
         else {
             setCommentButton(true);
             try {
-                setMessage("Comment submission in progress .... !!!!");
+                setMessage("Comment posting in progress .... !!!!");
                 setPopup(true);
                 const temp = await fundingcontractethers
                     .CrowdfundingDiscussionForum(
@@ -152,7 +152,7 @@ function FundingPage() {
                         comment,
                         rating)
                 await temp.wait();
-                setMessage("Comment submission success...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                setMessage("Comment posted successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             catch (error) {
                 error.reason != undefined ? setMessage("Error : " + (error.reason.includes("execution reverted:") ? error.reason.split("execution reverted:")[1] : error.reason)) :

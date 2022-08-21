@@ -149,7 +149,7 @@ function VotingEventPage() {
         else {
             setCommentButton(true);
             try {
-                setMessage("Comment submission in progress .... !!!!");
+                setMessage("Comment posting in progress .... !!!!");
                 setPopup(true);
                 const temp = await fundingcontractethers
                     .CrowdfundingDiscussionForum(
@@ -157,7 +157,7 @@ function VotingEventPage() {
                         comment,
                         rating)
                 await temp.wait();
-                setMessage("Commented successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                setMessage("Comment posted successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             catch (error) {
                 error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -231,7 +231,7 @@ function VotingEventPage() {
                     </Card.Header>
                     <ListGroup variant="flush">
                         <ListGroup.Item><b>Destination Wallet Address</b>: {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b>Refund All Contributors</b></span> : votingEventDetails.destination_wallet_address}</ListGroup.Item>
-                        <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}</ListGroup.Item>
+                        <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}{votingEventDetails.refund_event ?" divided proportionally accross the contributors" : ""}</ListGroup.Item>
                         <ListGroup.Item><b>Voting Event Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
                                 {!votingEventDetails.event_completion_status ? 'In Progress' : votingEventDetails.event_success_status ? 'Successful' : "Failed"}
