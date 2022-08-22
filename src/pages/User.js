@@ -78,7 +78,7 @@ function User() {
                                 onClick={UpdateDetails}
                                 disabled={cookies.MetamaskLoggedInAddress == undefined ? true : false}
                                 variant="primary">
-                                Save Changes</Button>
+                                Save</Button>
                             <div className='d-flex justify-content-end'>
                                 <Button
                                     onClick={RemoveDetails}
