@@ -40,6 +40,24 @@ export async function UpdateWalletDetails(wallet_details) {
     }
 }
 
+export async function DeleteWalletDetails(wallet_address) {
+    try {
+        var response = await axios
+            .request({
+                baseURL: baseURL,
+                method: 'DELETE',
+                url: "/v1/deletewallet",
+                data: {
+                    wallet_address: wallet_address
+                }
+            });
+        return response.data;
+    }
+    catch (e) {
+        return { message: e.message };
+    }
+}
+
 export async function SendEmail(fundDetails, votingEventDetails, fundAddress, votingIndex) {
     try {
         var response = await axios

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Card, Button, InputGroup, Form } from 'react-bootstrap';
-import { GetWalletDetails, UpdateWalletDetails } from '../components/CrowdfundingApi';
+import { GetWalletDetails, UpdateWalletDetails, DeleteWalletDetails } from '../components/CrowdfundingApi';
 
 function User() {
 
@@ -25,17 +25,30 @@ function User() {
         }
     }
 
-    var UpdateDetails = async (e) => {
+    var UpdateDetails = async () => {
         if (emailId.includes("@") && emailId != walletDetails[0]?.email_id) {
             await UpdateWalletDetails({
                 wallet_address: cookies.MetamaskLoggedInAddress,
                 email_id: emailId
             });
             window.alert("email id updated successfully");
+            window.location.reload(true);
         }
         else {
             window.alert("email in incorrect format or you are trying to update same email id");
         }
+    }
+
+    var RemoveDetails = async () => {
+
+        var temp = await DeleteWalletDetails(cookies.MetamaskLoggedInAddress);
+        if(temp.affectedRows == 0)
+            window.alert("No email id available in DB to delete");
+        else{
+            window.alert("Email id deleted successfully....!!");
+            window.location.reload(true);
+        }
+
     }
 
     return (
@@ -66,6 +79,13 @@ function User() {
                                 disabled={cookies.MetamaskLoggedInAddress == undefined ? true : false}
                                 variant="primary">
                                 Save Changes</Button>
+                            <div className='d-flex justify-content-end'>
+                                <Button
+                                    onClick={RemoveDetails}
+                                    disabled={cookies.MetamaskLoggedInAddress == undefined ? true : false}
+                                    variant="danger">
+                                    Remove Email</Button>
+                            </div>
                         </div>
                     </div>
                 </Card.Body>
