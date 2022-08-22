@@ -211,7 +211,7 @@ function VotingEventPage() {
                     <Card.Header>
                         <div className="d-flex justify-content-between">
                             <b>Voting Details {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b> (refund event)</b></span> : " "}</b>
-                            <span className="d-flex justify-content-end">
+                            <div className="d-flex justify-content-end">
                             {claimRefundButton && votingEventDetails.event_success_status && votingEventDetails.event_completion_status?
                                 <Button
                                     variant="success"
@@ -220,7 +220,7 @@ function VotingEventPage() {
                                     onClick={ClaimRefund}
                                 >
                                     Claim Refund
-                                </Button>+" " : <></>
+                                </Button> : <></>
                             }
                                 <Button
                                     variant="primary"
@@ -230,7 +230,7 @@ function VotingEventPage() {
                                 >
                                     Finish {!votingEventDetails.refund_event ? "Voting" : "Refund"} Event
                                 </Button>
-                            </span>
+                            </div>
                         </div>
                     </Card.Header>
                     <ListGroup variant="flush">
