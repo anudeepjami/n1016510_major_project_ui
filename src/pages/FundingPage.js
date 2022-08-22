@@ -114,7 +114,7 @@ function FundingPage() {
     var CreateVotingEvent = async (e) => {
         setContributeButtonStatus(true);
         try {
-            setMessage("Voting event creation in progress .... !!!!");
+            setMessage((e.target.id == "refund" ? "Refund" : "Voting") + " event creation in progress .... !!!!");
             setPopup(true);
             const temp = await fundingcontractethers
                 .CreateAnVotingEvent(
@@ -126,7 +126,7 @@ function FundingPage() {
             await temp.wait();
             var temp2 = await fundingcontract.methods.GetVotingEvents().call();
             await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
-            setMessage("Voting event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            setMessage((e.target.id == "refund" ? "Refund" : "Voting") + " event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + (error.reason.includes("execution reverted:") ? error.reason.split("execution reverted:")[1] : error.reason)) :
@@ -398,7 +398,7 @@ function FundingPage() {
                                         <tr key={index}
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => LoadVotingPage(index)}>
-                                            <td>{item.title}{item.refund_event ? <span style={{ color: 'red' }}><b> (refund event)</b></span> : " "}</td>
+                                            <td>{item.title}{item.refund_event ? <span style={{ color: 'red' }}><b> (Refund event)</b></span> : " "}</td>
                                             <td>{!item.refund_event ? item.destination_wallet_address : "All contributors of this fundraiser"}</td>
                                             <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
                                             <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
