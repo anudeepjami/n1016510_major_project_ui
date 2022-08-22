@@ -212,7 +212,7 @@ function VotingEventPage() {
                         <div className="d-flex justify-content-between">
                             <b>Voting Details {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b> (refund event)</b></span> : " "}</b>
                             <div className="d-flex justify-content-end">
-                            {claimRefundButton && votingEventDetails.event_success_status && votingEventDetails.event_completion_status?
+                            {claimRefundButton && votingEventDetails.event_success_status && votingEventDetails.event_completion_status && votingEventDetails.refund_event ?
                                 <Button
                                     variant="success"
                                     type="submit"
@@ -220,8 +220,9 @@ function VotingEventPage() {
                                     onClick={ClaimRefund}
                                 >
                                     Claim Refund
-                                </Button> : <></>
+                                </Button>: <></>
                             }
+                                &nbsp;
                                 <Button
                                     variant="primary"
                                     type="submit"
