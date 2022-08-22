@@ -228,7 +228,7 @@ function VotingEventPage() {
                                     disabled={pollingButton}
                                     onClick={ClosePolling}
                                 >
-                                    Finish Voting Event
+                                    Finish {!votingEventDetails.refund_event ? "Voting" : "Refund"} Event
                                 </Button> : <></>
                             }
                         </div>
@@ -244,10 +244,10 @@ function VotingEventPage() {
                         <ListGroup.Item>
                             <p>
                                 <b>Vote Alignment: </b>
-                                Approved: <b style={{ color: 'green' }}>{voteDivision.approved}</b>,
-                                Refused: <b style={{ color: 'red' }}>{voteDivision.refused}</b>,
-                                Yet to Vote: <b style={{ color: 'blue' }}>{voteDivision.yettovote}</b>,
-                                Total: <b>{voteDivision.total}</b>
+                                Approved votes: <b style={{ color: 'green' }}>{voteDivision.approved}</b>,
+                                Refused votes: <b style={{ color: 'red' }}>{voteDivision.refused}</b>,
+                                Yet to vote votes: <b style={{ color: 'blue' }}>{voteDivision.yettovote}</b>,
+                                Total votes: <b>{voteDivision.total}</b>
                             </p>
                             <Button variant="primary" type="submit" onClick={() => { setViewContributorsVotingTable(!viewContributorsVotingTable) }}>
                                 {!viewContributorsVotingTable ? 'View' : 'Hide'} Contributors Voting Table
