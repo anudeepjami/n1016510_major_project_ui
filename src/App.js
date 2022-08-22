@@ -45,14 +45,29 @@ function App() {
             <Navbar.Text>
               <Card>
                 <Card.Header>
-                  {cookies.MetamaskNetwork != undefined ? "Ethereum Network: " : ""}<b>
-                    {cookies.MetamaskNetwork == "0x4" ? "Rinkeby" :
-                      cookies.MetamaskNetwork == "0x1691" ? "Ganache Local" : "Only Rinkeby and local Ganache Supported"}</b>
+                  {cookies.MetamaskNetwork != undefined ? "Ethereum Network: " : ""}
+                  <b>
+                    <span style={{ color: 'green' }}>
+                      {cookies.MetamaskNetwork == "0x4" && !window.location.href.includes("localhost") ? "Rinkeby Netowrk" : ""}
+                      {cookies.MetamaskNetwork == "0x1691" && window.location.href.includes("localhost") ? "Local Ganache Network" : ""}
+                    </span>
+                    <span style={{ color: 'red' }}>
+                      {cookies.MetamaskNetwork != "0x4" && !window.location.href.includes("localhost") ? "Only Rinkeby Network Supported" : ""}
+                      {cookies.MetamaskNetwork != "0x1691" && window.location.href.includes("localhost") ? "Only Local Ganache Network Supported" : ""}
+                    </span>
+                  </b>
                 </Card.Header>
                 <ListGroup variant="flush">
-                  <ListGroup.Item><b>
-                    {cookies.MetamaskLoggedInAddress != undefined ? cookies.MetamaskLoggedInAddress : "Read only mode enabled as Metamask is not logged in"}
-                  </b></ListGroup.Item>
+                  <ListGroup.Item>
+                    <b>
+                      <span style={{ color: 'green' }}>
+                        {cookies.MetamaskLoggedInAddress != undefined ? cookies.MetamaskLoggedInAddress : ""}
+                      </span>
+                      <span style={{ color: 'red' }}>
+                        {cookies.MetamaskLoggedInAddress == undefined ? "Read only mode enabled as Metamask is not logged in" : ""}
+                      </span>
+                    </b>
+                  </ListGroup.Item>
                 </ListGroup>
               </Card>
             </Navbar.Text>
