@@ -78,11 +78,11 @@ function User() {
                                 onClick={UpdateDetails}
                                 disabled={cookies.MetamaskLoggedInAddress == undefined ? true : false}
                                 variant="primary">
-                                Save</Button>
+                                Save Changes</Button>
                             <div className='d-flex justify-content-end'>
                                 <Button
                                     onClick={RemoveDetails}
-                                    disabled={cookies.MetamaskLoggedInAddress == undefined ? true : false}
+                                    disabled={cookies.MetamaskLoggedInAddress == undefined || emailId == ""? true : false}
                                     variant="danger">
                                     Remove Email</Button>
                             </div>
