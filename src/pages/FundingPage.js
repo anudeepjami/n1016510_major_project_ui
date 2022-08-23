@@ -181,7 +181,22 @@ function FundingPage() {
                 </Button>
                 <h1 className="text-center" >{fundDetails[0]}</h1>
                 <h3 className="text-center" >{fundDetails[1]}</h3>
-                <h5> Fund Details: (Fund Address : {cookies.FundAddress})</h5>
+                <h5 className='d-flex justify-content-between'>
+                    <div>
+                        Fund Details: (Fund Address : {cookies.FundAddress})
+                    </div>
+                    <div>
+                        <Button
+                            variant="info"
+                            type="submit"
+                            disabled={window.location.href.includes('localhost')}
+                            onClick={() => {
+                                window.open('https://rinkeby.etherscan.io/address/'+cookies.FundAddress, '_blank', 'noopener,noreferrer');
+                            }}>
+                            History
+                        </Button>
+                    </div>
+                </h5>
                 <Card>
                     <Card.Header as="h4">Fund Manager Details</Card.Header>
                     <Card.Body>
@@ -238,7 +253,7 @@ function FundingPage() {
                                 Total Number of Contributors and Votes.
                                 <br /><br />
                                 <Button
-                                    variant="primary"
+                                    variant="info"
                                     type="submit"
                                     onClick={() => {
                                         setViewContributorsTable(!viewContributorsTable)
@@ -346,7 +361,7 @@ function FundingPage() {
                                 </> : <></>}
 
                                 <Button
-                                    variant="primary"
+                                    variant="info"
                                     type="submit"
                                     onClick={() => {
                                         setViewVotingEventsTable(!viewVotingEventsTable)

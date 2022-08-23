@@ -250,7 +250,9 @@ function VotingEventPage() {
                                 Yet to vote votes: <b style={{ color: 'blue' }}>{voteDivision.yettovote}</b>,
                                 Total votes: <b>{voteDivision.total}</b>
                             </p>
-                            <Button variant="primary" type="submit" onClick={() => { setViewContributorsVotingTable(!viewContributorsVotingTable) }}>
+                            <Button variant="info"
+                                type="submit"
+                                onClick={() => { setViewContributorsVotingTable(!viewContributorsVotingTable) }}>
                                 {!viewContributorsVotingTable ? 'View' : 'Hide'} Contributors Voting Table
                             </Button>&nbsp;
                             <span style={{ float: 'right' }}>
