@@ -4,9 +4,11 @@ import { Form, Button, Modal } from 'react-bootstrap';
 import { MainContractEthers } from '../components/ethereum_connectors/MainContract.js';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import { useCookies } from 'react-cookie';
 
 function CreateFundingEventPage() {
 
+  const [cookies, setCookie] = useCookies();
   const [maincontractethers, setMaincontractethers] = useState(MainContractEthers());
   const [crowdfundingEvents, setCrowdfundingEvents] = useState({
     title: "Enter Title (cannot be empty)",
@@ -45,13 +47,17 @@ function CreateFundingEventPage() {
     try {
       setMessage("Crowdfunding campaign creation in progress .... !!!!");
       setPopup(true);
-      const temp = await maincontractethers
-        .CreateCrowdfundingEvent(
-          crowdfundingEvents.title,
-          crowdfundingEvents.content,
-          Web3.utils.toWei(crowdfundingEvents.min_deposit, 'ether'));
-      await temp.wait();
-      setMessage(" Crowdfunding campaign created successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+      if (cookies.MetamaskLoggedInAddress) {
+        const temp = await maincontractethers
+          .CreateCrowdfundingEvent(
+            crowdfundingEvents.title,
+            crowdfundingEvents.content,
+            Web3.utils.toWei(crowdfundingEvents.min_deposit, 'ether'));
+        await temp.wait();
+        setMessage(" Crowdfunding campaign created successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+      }
+      else
+        setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
     }
     catch (error) {
       error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -89,12 +95,12 @@ function CreateFundingEventPage() {
       </div>
       <Modal show={popup} onHide={PopupHandler} size="lg" centered>
         <Modal.Header closeButton>
-          <Modal.Title>AJ Crowdfunding Platform Message Popup</Modal.Title>
+          <Modal.Title>AJ Hybrid DAO Crowdfunding Platform</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div>
             <b
-              style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}
+              style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') || message.includes('Login') ? 'red' : 'green' }}
               dangerouslySetInnerHTML={{ __html: message }}
             >
             </b>

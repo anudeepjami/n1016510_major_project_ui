@@ -96,11 +96,15 @@ function FundingPage() {
         try {
             setMessage("User contribution in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontractethers
-                .DepositToCrowdfundingEvent({ value: Web3.utils.toWei(depositAmount, 'ether') })
-            await temp.wait();
-            setMessage("contribution successful...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash
-                + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            if (cookies.MetamaskLoggedInAddress) {
+                const temp = await fundingcontractethers
+                    .DepositToCrowdfundingEvent({ value: Web3.utils.toWei(depositAmount, 'ether') })
+                await temp.wait();
+                setMessage("contribution successful...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash
+                    + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            }
+            else
+                setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + (error.reason.includes("execution reverted:") ? error.reason.split("execution reverted:")[1] : error.reason)) :
@@ -116,17 +120,21 @@ function FundingPage() {
         try {
             setMessage((e.target.id == "refund" ? "Refund" : "Voting") + " event creation in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontractethers
-                .CreateAnVotingEvent(
-                    createVotingEventDetails.title,
-                    createVotingEventDetails.description,
-                    viewRefund ? cookies.FundAddress : createVotingEventDetails.destination_address,
-                    viewRefund ? fundDetails[6].toString() : Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'),
-                    e.target.id == "refund" ? 1 : 0)
-            await temp.wait();
-            var temp2 = await fundingcontract.methods.GetVotingEvents().call();
-            await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
-            setMessage((e.target.id == "refund" ? "Refund" : "Voting") + " event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            if (cookies.MetamaskLoggedInAddress) {
+                const temp = await fundingcontractethers
+                    .CreateAnVotingEvent(
+                        createVotingEventDetails.title,
+                        createVotingEventDetails.description,
+                        viewRefund ? cookies.FundAddress : createVotingEventDetails.destination_address,
+                        viewRefund ? fundDetails[6].toString() : Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'),
+                        e.target.id == "refund" ? 1 : 0)
+                await temp.wait();
+                var temp2 = await fundingcontract.methods.GetVotingEvents().call();
+                await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
+                setMessage((e.target.id == "refund" ? "Refund" : "Voting") + " event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            }
+            else
+                setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + (error.reason.includes("execution reverted:") ? error.reason.split("execution reverted:")[1] : error.reason)) :
@@ -147,13 +155,17 @@ function FundingPage() {
             try {
                 setMessage("Comment posting in progress .... !!!!");
                 setPopup(true);
-                const temp = await fundingcontractethers
+                if (cookies.MetamaskLoggedInAddress) {
+                    const temp = await fundingcontractethers
                     .CrowdfundingDiscussionForum(
                         cookies.VotingIndex,
                         comment,
                         rating)
                 await temp.wait();
                 setMessage("Comment posted successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                }
+                else
+                    setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
             }
             catch (error) {
                 error.reason != undefined ? setMessage("Error : " + (error.reason.includes("execution reverted:") ? error.reason.split("execution reverted:")[1] : error.reason)) :
@@ -506,12 +518,12 @@ function FundingPage() {
                     size="lg"
                     centered>
                     <Modal.Header closeButton>
-                        <Modal.Title>AJ Crowdfunding Platform Message Popup</Modal.Title>
+                        <Modal.Title>AJ Hybrid DAO Crowdfunding Platform</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div>
                             <b
-                                style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}
+                                style={{ color: message.includes('progress') ? 'blue' : message.includes('Error')|| message.includes('Login') ? 'red' : 'green' }}
                                 dangerouslySetInnerHTML={{ __html: message }}
                             >
                             </b>

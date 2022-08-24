@@ -102,10 +102,14 @@ function VotingEventPage() {
         try {
             setMessage("Voting in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontractethers
-                .VoteForVotingEvent(cookies.VotingIndex, vote);
-            await temp.wait();
-            setMessage("Vote recorded successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            if (cookies.MetamaskLoggedInAddress) {
+                const temp = await fundingcontractethers
+                    .VoteForVotingEvent(cookies.VotingIndex, vote);
+                await temp.wait();
+                setMessage("Vote recorded successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            }
+            else
+                setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -121,16 +125,20 @@ function VotingEventPage() {
         try {
             setMessage("Close polling in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontractethers
-                .CompleteVotingEvent(cookies.VotingIndex);
-            await temp.wait();
-            var refund_success = await fundingcontract.methods.refund_event_success().call();
-            if (refund_success) {
-                var temp2 = await fundingcontract.methods.GetVotingEvents().call();
-                await SendRefundEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
+            if (cookies.MetamaskLoggedInAddress) {
+                const temp = await fundingcontractethers
+                    .CompleteVotingEvent(cookies.VotingIndex);
+                await temp.wait();
+                var refund_success = await fundingcontract.methods.refund_event_success().call();
+                if (refund_success) {
+                    var temp2 = await fundingcontract.methods.GetVotingEvents().call();
+                    await SendRefundEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
+                }
+                var refund_msg = refund_success ? " and claim refund emails are sent to contributors" : " ";
+                setMessage("Polling closed successfully" + refund_msg + "...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
-            var refund_msg = refund_success ? " and claim refund emails are sent to contributors" : " ";
-            setMessage("Polling closed successfully" + refund_msg + "...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            else
+                setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -151,13 +159,17 @@ function VotingEventPage() {
             try {
                 setMessage("Comment posting in progress .... !!!!");
                 setPopup(true);
-                const temp = await fundingcontractethers
-                    .CrowdfundingDiscussionForum(
-                        cookies.VotingIndex,
-                        comment,
-                        rating)
-                await temp.wait();
-                setMessage("Comment posted successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                if (cookies.MetamaskLoggedInAddress) {
+                    const temp = await fundingcontractethers
+                        .CrowdfundingDiscussionForum(
+                            cookies.VotingIndex,
+                            comment,
+                            rating)
+                    await temp.wait();
+                    setMessage("Comment posted successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                }
+                else
+                    setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
             }
             catch (error) {
                 error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -175,9 +187,13 @@ function VotingEventPage() {
         try {
             setMessage("Refund in progress .... !!!!");
             setPopup(true);
-            const temp = await fundingcontractethers.ClaimRefund();
-            await temp.wait();
-            setMessage("Refunded successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            if (cookies.MetamaskLoggedInAddress) {
+                const temp = await fundingcontractethers.ClaimRefund();
+                await temp.wait();
+                setMessage("Refunded successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+            }
+            else
+                setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
         }
         catch (error) {
             error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
@@ -212,16 +228,16 @@ function VotingEventPage() {
                         <div className="d-flex justify-content-between">
                             <b>Voting Details {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b> (refund event)</b></span> : " "}</b>
                             <div className="d-flex justify-content-end">
-                            {claimRefundButton && votingEventDetails.event_success_status && votingEventDetails.event_completion_status && votingEventDetails.refund_event ?
-                                <Button
-                                    variant="success"
-                                    type="submit"
-                                    disabled={!claimRefundButton}
-                                    onClick={ClaimRefund}
-                                >
-                                    Claim Refund
-                                </Button>: <></>
-                            }
+                                {claimRefundButton && votingEventDetails.event_success_status && votingEventDetails.event_completion_status && votingEventDetails.refund_event ?
+                                    <Button
+                                        variant="success"
+                                        type="submit"
+                                        disabled={!claimRefundButton}
+                                        onClick={ClaimRefund}
+                                    >
+                                        Claim Refund
+                                    </Button> : <></>
+                                }
                                 &nbsp;
                                 <Button
                                     variant="primary"
@@ -368,12 +384,12 @@ function VotingEventPage() {
                     size="lg"
                     centered>
                     <Modal.Header closeButton>
-                        <Modal.Title>AJ Crowdfunding Platform Message Popup</Modal.Title>
+                        <Modal.Title>AJ Hybrid DAO Crowdfunding Platform</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <div>
                             <b
-                                style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') ? 'red' : 'green' }}
+                                style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') || message.includes('Login') ? 'red' : 'green' }}
                                 dangerouslySetInnerHTML={{ __html: message }}
                             >
                             </b>
