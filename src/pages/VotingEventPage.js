@@ -218,7 +218,7 @@ function VotingEventPage() {
                     <ListGroup variant="flush">
                         <ListGroup.Item><b>Fund Address</b>: {cookies.FundAddress}</ListGroup.Item>
                         <ListGroup.Item><b>Manager Address</b>: {fundDetails[2]}</ListGroup.Item>
-                        <ListGroup.Item><b>Fund Balance</b>: {Web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " eth"}</ListGroup.Item>
+                        <ListGroup.Item><b>Fund Balance</b>: {Web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " Eth"}</ListGroup.Item>
                         <ListGroup.Item><b>Contributors Info</b>: {fundDetails[4]?.length + ' contributors have ' + fundDetails[5] + ' votes.'}</ListGroup.Item>
                     </ListGroup>
                 </Card>
@@ -252,7 +252,7 @@ function VotingEventPage() {
                     </Card.Header>
                     <ListGroup variant="flush">
                         <ListGroup.Item><b>Destination Wallet Address</b>: {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b>Refund All Contributors</b></span> : votingEventDetails.destination_wallet_address}</ListGroup.Item>
-                        <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}{votingEventDetails.refund_event ? " divided proportionally accross the contributors" : ""}</ListGroup.Item>
+                        <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " Eth"}{votingEventDetails.refund_event ? " divided proportionally accross the contributors" : ""}</ListGroup.Item>
                         <ListGroup.Item><b>Request Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
                                 {!votingEventDetails.event_completion_status ? 'In Progress' : votingEventDetails.event_success_status ? 'Successful' : "Failed"}
@@ -291,7 +291,7 @@ function VotingEventPage() {
                                             return (
                                                 <tr key={index}>
                                                     <td>{item.contributor_address}</td>
-                                                    <td>{Web3.utils.fromWei((item.contributor_votes * fundDetails[3]).toString(), 'ether') + " eth"}</td>
+                                                    <td>{Web3.utils.fromWei((item.contributor_votes * fundDetails[3]).toString(), 'ether') + " Eth"}</td>
                                                     <td>{item.contributor_votes}</td>
                                                     <td style={{ color: item.contributor_vote_status == undefined ? 'white' : item.contributor_vote_status ? 'green' : 'red' }}>
                                                         {item.contributor_vote_status == undefined ? "Yet to Vote" : item.contributor_vote_status ? "Approved" : "Refused"}

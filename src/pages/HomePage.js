@@ -46,7 +46,7 @@ function HomePage() {
                   <Card.Title><b>{item.crowdfunding_event_title}</b></Card.Title>
                   <Card.Text>
                     {item.crowdfunding_event_content} <br />
-                    minimum contribution required : {Web3.utils.fromWei(item.crowdfunding_event_min_deposit.toString(), 'ether') + " eth"}
+                    minimum contribution required : {Web3.utils.fromWei(item.crowdfunding_event_min_deposit.toString(), 'ether') + " Eth"}
                   </Card.Text>
                 </Card.Body>
                 <Card.Footer className="text-muted"><b>Fund Manager Address: {item.crowdfunding_event_manager_address}</b></Card.Footer>

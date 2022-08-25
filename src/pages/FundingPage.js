@@ -223,7 +223,7 @@ function FundingPage() {
                     <Card className='m-1'>
                         <Card.Header as="h4">Minimum Contribution</Card.Header>
                         <Card.Body>
-                            <Card.Title>{Web3.utils.fromWei(fundDetails[3] == undefined ? '0' : fundDetails[3].toString(), 'ether') + " eth"}</Card.Title>
+                            <Card.Title>{Web3.utils.fromWei(fundDetails[3] == undefined ? '0' : fundDetails[3].toString(), 'ether') + " Eth"}</Card.Title>
                             <Card.Text>
                                 Deposits should be made equal to or in multiples of the minimum amount set for this fund.
                                 <br /><br />
@@ -234,12 +234,12 @@ function FundingPage() {
                                     <InputGroup className="mb-3">
                                         <Button variant="primary" type="submit" disabled={contributeButtonStatus} onClick={ContributeFunds}>Contribute</Button>
                                         <Form.Control
-                                            placeholder="Enter Contribution in ether"
+                                            placeholder="Enter Contribution in Ether"
                                             aria-describedby="basic-addon2"
                                             onChange={(event) => setDepositAmount(event.target.value)}
                                             type="number"
                                         />
-                                        <InputGroup.Text>ether</InputGroup.Text>
+                                        <InputGroup.Text>Eth</InputGroup.Text>
                                     </InputGroup>
                                 </> : <></>}
                             </Card.Text>
@@ -248,7 +248,7 @@ function FundingPage() {
                     <Card className='m-1'>
                         <Card.Header as="h4">Fund Balance</Card.Header>
                         <Card.Body>
-                            <Card.Title>{Web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " eth"}</Card.Title>
+                            <Card.Title>{Web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " Eth"}</Card.Title>
                             <Card.Text>
                                 This is the balance left for the fund manager to spend from the funds ethereum account.
                             </Card.Text>
@@ -342,10 +342,10 @@ function FundingPage() {
                                                 />
                                             </InputGroup>
                                             <InputGroup className="mb-3">
-                                                <InputGroup.Text>ether</InputGroup.Text>
+                                                <InputGroup.Text>Eth</InputGroup.Text>
                                                 <Form.Control
                                                     id='4'
-                                                    placeholder="Enter how much ether you want to send"
+                                                    placeholder="Enter how much Ether you want to send"
                                                     aria-describedby="basic-addon2"
                                                     onChange={LoadVotingEventDetails}
                                                     type="number"
@@ -400,7 +400,7 @@ function FundingPage() {
                                     return (
                                         <tr key={index}>
                                             <td>{item.contributor_address}</td>
-                                            <td>{Web3.utils.fromWei((item.contributor_votes * fundDetails[3]).toString(), 'ether') + " eth"}</td>
+                                            <td>{Web3.utils.fromWei((item.contributor_votes * fundDetails[3]).toString(), 'ether') + " Eth"}</td>
                                             <td>{item.contributor_votes}</td>
                                         </tr>
                                     )
@@ -427,7 +427,7 @@ function FundingPage() {
                                             onClick={() => LoadVotingPage(index)}>
                                             <td>{item.title}{item.refund_event ? <span style={{ color: 'red' }}><b> (Refund Request)</b></span> : <span style={{ color: 'green' }}><b> (Disbursal Request)</b></span>}</td>
                                             <td>{!item.refund_event ? item.destination_wallet_address : "All contributors of this fundraiser"}</td>
-                                            <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
+                                            <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' Eth'}</td>
                                             <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
                                                 {
                                                     !item.event_completion_status ? 'In Progress' : item.event_success_status ? 'Successful' : "Failed"
