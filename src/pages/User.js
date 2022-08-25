@@ -66,7 +66,7 @@ function User() {
                             />
                         </InputGroup>
                         <InputGroup className="mb-3">
-                            <InputGroup.Text>User Email id :</InputGroup.Text>
+                            <InputGroup.Text>User Email ID :</InputGroup.Text>
                             <Form.Control
                                 placeholder={cookies.MetamaskLoggedInAddress == undefined ? "Connect with Metamask to edit your email address" : walletDetails.length != 0 ? walletDetails[0]?.email_id : "Enter Your Email id"}
                                 disabled={cookies.MetamaskLoggedInAddress == undefined ? true : false}
