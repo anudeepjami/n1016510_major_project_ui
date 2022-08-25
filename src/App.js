@@ -48,7 +48,7 @@ function App() {
                   {cookies.MetamaskNetwork != undefined ? "Ethereum Network: " : ""}
                   <b>
                     <span style={{ color: 'green' }}>
-                      {cookies.MetamaskNetwork == "0x4" && !window.location.href.includes("localhost") ? "Rinkeby Netowrk" : ""}
+                      {cookies.MetamaskNetwork == "0x4" && !window.location.href.includes("localhost") ? "Rinkeby Network" : ""}
                       {cookies.MetamaskNetwork == "0x1691" && window.location.href.includes("localhost") ? "Local Ganache Network" : ""}
                     </span>
                     <span style={{ color: 'red' }}>
