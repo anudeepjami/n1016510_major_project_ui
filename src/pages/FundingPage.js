@@ -277,11 +277,11 @@ function FundingPage() {
                         </Card.Body>
                     </Card>
                     <Card className='m-1' style={{ width: '50%' }}>
-                        <Card.Header as="h4">Voting/Refund Events</Card.Header>
+                        <Card.Header as="h4">Disbursal/Refund Requests</Card.Header>
                         <Card.Body>
                             <Card.Title>{fundDetails[7]}</Card.Title>
                             <Card.Text>
-                                Voting/refund events present in this fund.
+                                Disbursal/Refund requests present in this fund.
                                 <br /><br />
                                 <Button
                                     variant="primary"
@@ -289,14 +289,14 @@ function FundingPage() {
                                     onClick={() => {
                                         setViewCreateVotingEventForm(!viewCreateVotingEventForm)
                                     }}>
-                                    {!viewCreateVotingEventForm ? 'Create Voting/Refund Event' : 'Hide Create Voting/Refund Event Form'}</Button>
+                                    {!viewCreateVotingEventForm ? 'Create Request' : 'Hide Create Request'}</Button>
                                 <br /><br />
                                 {viewCreateVotingEventForm ? <>
                                     <Form>
                                         <div className="mb-3">
                                             <Form.Check
                                                 inline
-                                                label="Voting Event"
+                                                label="Disbursal Request"
                                                 name="group1"
                                                 type='radio'
                                                 checked={!viewRefund}
@@ -304,7 +304,7 @@ function FundingPage() {
                                             />
                                             <Form.Check
                                                 inline
-                                                label="Refund Event"
+                                                label="Refund Request"
                                                 name="group1"
                                                 type='radio'
                                                 checked={viewRefund}
@@ -313,7 +313,7 @@ function FundingPage() {
                                         </div>
                                     </Form>
                                     <InputGroup className="mb-3">
-                                        <InputGroup.Text>{!viewRefund ? "Voting" : "Refund"} Event Title</InputGroup.Text>
+                                        <InputGroup.Text>{!viewRefund ? "Disbursal" : "Refund"} Request Title</InputGroup.Text>
                                         <Form.Control
                                             id='1'
                                             placeholder="Enter Title"
@@ -322,7 +322,7 @@ function FundingPage() {
                                         />
                                     </InputGroup>
                                     <InputGroup className="mb-3">
-                                        <InputGroup.Text>{!viewRefund ? "Voting" : "Refund"} Event Description</InputGroup.Text>
+                                        <InputGroup.Text>{!viewRefund ? "Disbursal" : "Refund"} Request Description</InputGroup.Text>
                                         <Form.Control
                                             id='2'
                                             placeholder="Enter Descrption"
@@ -358,7 +358,7 @@ function FundingPage() {
                                             type="submit"
                                             disabled={createVotingEventButtonStatus}
                                             onClick={CreateVotingEvent}>
-                                            Create Voting Event
+                                            Create Disbursal Request
                                         </Button> : <></>}
                                     {viewRefund ?
                                         <Button
@@ -367,7 +367,7 @@ function FundingPage() {
                                             id="refund"
                                             disabled={createVotingEventButtonStatus}
                                             onClick={CreateVotingEvent}>
-                                            Create Refund Event
+                                            Create Refund Request
                                         </Button> : <></>}
                                     <br /><br />
                                 </> : <></>}
@@ -379,7 +379,7 @@ function FundingPage() {
                                         setViewVotingEventsTable(!viewVotingEventsTable)
                                         setViewContributorsTable(false)
                                     }}>
-                                    {!viewVotingEventsTable ? 'View' : 'Hide'} Voting/Refund Events</Button>
+                                    {!viewVotingEventsTable ? 'View' : 'Hide'} Disbursal/Refund Requests</Button>
                                 <br /><br />
                             </Card.Text>
                         </Card.Body>
@@ -413,7 +413,7 @@ function FundingPage() {
                         <Table striped bordered hover variant="light">
                             <thead>
                                 <tr>
-                                    <th>Event Title</th>
+                                    <th>Request Title</th>
                                     <th>Destination Wallet</th>
                                     <th>Transfer Amount</th>
                                     <th>Voting Status</th>
