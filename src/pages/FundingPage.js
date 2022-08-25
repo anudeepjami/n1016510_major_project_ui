@@ -313,7 +313,7 @@ function FundingPage() {
                                         </div>
                                     </Form>
                                     <InputGroup className="mb-3">
-                                        <InputGroup.Text>{!viewRefund ? "Disbursal" : "Refund"} Request Title</InputGroup.Text>
+                                        <InputGroup.Text>Request Title</InputGroup.Text>
                                         <Form.Control
                                             id='1'
                                             placeholder="Enter Title"
@@ -322,7 +322,7 @@ function FundingPage() {
                                         />
                                     </InputGroup>
                                     <InputGroup className="mb-3">
-                                        <InputGroup.Text>{!viewRefund ? "Disbursal" : "Refund"} Request Description</InputGroup.Text>
+                                        <InputGroup.Text>Request Description</InputGroup.Text>
                                         <Form.Control
                                             id='2'
                                             placeholder="Enter Descrption"
