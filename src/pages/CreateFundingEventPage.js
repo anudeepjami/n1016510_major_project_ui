@@ -74,7 +74,7 @@ function CreateFundingEventPage() {
   return (
     <>
       <div style={{ width: "50%", margin: "0 auto" }} >
-        <h1>Create a CrowdFunding Campaign</h1>
+        <h1>Create a Fundraiser</h1>
         <Form>
           <Form.Group className="mb-4">
             <Form.Label>Title :</Form.Label>
