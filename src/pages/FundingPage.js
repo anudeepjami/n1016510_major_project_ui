@@ -413,7 +413,7 @@ function FundingPage() {
                         <Table striped bordered hover variant="light">
                             <thead>
                                 <tr>
-                                    <th>Voting/Refund Event Title</th>
+                                    <th>Event Title</th>
                                     <th>Destination Wallet</th>
                                     <th>Transfer Amount</th>
                                     <th>Voting Status</th>
@@ -425,7 +425,7 @@ function FundingPage() {
                                         <tr key={index}
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => LoadVotingPage(index)}>
-                                            <td>{item.title}{item.refund_event ? <span style={{ color: 'red' }}><b> (Refund event)</b></span> : " "}</td>
+                                            <td>{item.title}{item.refund_event ? <span style={{ color: 'red' }}><b> (Refund Request)</b></span> : <span style={{ color: 'green' }}><b> (Disbursal Request)</b></span>}</td>
                                             <td>{!item.refund_event ? item.destination_wallet_address : "All contributors of this fundraiser"}</td>
                                             <td>{Web3.utils.fromWei((item.amount_to_send).toString(), 'ether') + ' eth'}</td>
                                             <td style={{ color: !item.event_completion_status ? 'blue' : item.event_success_status ? 'green' : 'red' }}>
