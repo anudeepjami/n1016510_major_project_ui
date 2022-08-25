@@ -226,7 +226,7 @@ function VotingEventPage() {
                 <Card>
                     <Card.Header>
                         <div className="d-flex justify-content-between">
-                            <b>Voting Details {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b> (refund event)</b></span> : " "}</b>
+                            <b>Voting Details {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b> (Refund Request)</b></span> : <span style={{ color: 'green' }}><b> (Disbursal Request)</b></span>}</b>
                             <div className="d-flex justify-content-end">
                                 {claimRefundButton && votingEventDetails.event_success_status && votingEventDetails.event_completion_status && votingEventDetails.refund_event ?
                                     <Button
@@ -245,7 +245,7 @@ function VotingEventPage() {
                                     disabled={pollingButton}
                                     onClick={ClosePolling}
                                 >
-                                    Finish {!votingEventDetails.refund_event ? "Voting" : "Refund"} Event
+                                    Finish {!votingEventDetails.refund_event ? "Disbursal" : "Refund"} Request
                                 </Button>
                             </div>
                         </div>
@@ -253,7 +253,7 @@ function VotingEventPage() {
                     <ListGroup variant="flush">
                         <ListGroup.Item><b>Destination Wallet Address</b>: {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b>Refund All Contributors</b></span> : votingEventDetails.destination_wallet_address}</ListGroup.Item>
                         <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " eth"}{votingEventDetails.refund_event ? " divided proportionally accross the contributors" : ""}</ListGroup.Item>
-                        <ListGroup.Item><b>Voting Event Status</b>:&nbsp;
+                        <ListGroup.Item><b>Request Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
                                 {!votingEventDetails.event_completion_status ? 'In Progress' : votingEventDetails.event_success_status ? 'Successful' : "Failed"}
                             </ins>
@@ -310,7 +310,7 @@ function VotingEventPage() {
                     <Card>
                         <Card.Header>
                             <div className='d-flex justify-content-between'>
-                                <h4>Discussion Form for {votingEventDetails.refund_event ? "Refund" : "Voting"} Event</h4>
+                                <h4>Discussion Form for {votingEventDetails.refund_event ? "Refund" : "Disbursal"} Request</h4>
                                 <div>
                                     <span>Overall Rating: </span>
                                     <Rating

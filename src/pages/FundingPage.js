@@ -444,7 +444,7 @@ function FundingPage() {
                     <Card>
                         <Card.Header>
                             <div className='d-flex justify-content-between'>
-                                <h4>Discussion Form for Fund</h4>
+                                <h4>Discussion Form for Fundraiser</h4>
                                 <div>
                                     <span>Overall Rating: </span>
                                     <Rating
