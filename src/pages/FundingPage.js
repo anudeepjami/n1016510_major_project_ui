@@ -413,7 +413,7 @@ function FundingPage() {
                         <Table striped bordered hover variant="light">
                             <thead>
                                 <tr>
-                                    <th>Voting Event Title</th>
+                                    <th>Voting/Refund Event Title</th>
                                     <th>Destination Wallet</th>
                                     <th>Transfer Amount</th>
                                     <th>Voting Status</th>
