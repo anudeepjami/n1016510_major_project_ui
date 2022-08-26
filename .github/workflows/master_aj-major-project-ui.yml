@@ -61,3 +61,8 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D1880A75CCAA416DA837F5DDFA1DEF10 }}
           package: ui.zip
+      
+      - name: Delete Build Artifact
+        uses: joutvhu/delete-artifact@v1.0.1
+        with:
+          name: n1016510-MajorProject-API
