@@ -85,7 +85,7 @@ function CreateFundingEventPage() {
             <Form.Control id='2' type="text" value={crowdfundingEvents.content} onClick={ChangeField} onChange={ChangeField} />
           </Form.Group>
           <Form.Group className="mb-4">
-            <Form.Label>Minimum amount of Ether required to become a contributor of the fundraiser : (Enter value in Ether)</Form.Label>
+            <Form.Label>Minimum contribution of Ether required to become a contributor of the fundraiser : (Enter value in Ether)</Form.Label>
             <Form.Control id='3' type="number" min="0.00001" value={crowdfundingEvents.min_deposit} onClick={ChangeField} onChange={ChangeField} />
           </Form.Group>
           <Button variant="primary" type="submit" disabled={buttonStatus} onClick={CreateCrowdfundingEvent}>
