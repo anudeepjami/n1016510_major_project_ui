@@ -65,4 +65,4 @@ jobs:
       - name: Delete Build Artifact
         uses: joutvhu/delete-artifact@v1.0.1
         with:
-          name: n1016510-MajorProject-API
+          name: n1016510-MajorProject-UI
