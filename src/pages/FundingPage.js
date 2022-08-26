@@ -391,7 +391,7 @@ function FundingPage() {
                             <thead>
                                 <tr>
                                     <th>Contributor</th>
-                                    <th>Deposit</th>
+                                    <th>Contribution</th>
                                     <th>No of Votes</th>
                                 </tr>
                             </thead>
