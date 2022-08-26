@@ -123,7 +123,7 @@ function VotingEventPage() {
     var ClosePolling = async () => {
         setPollingButton(true);
         try {
-            setMessage("Close polling in progress .... !!!!");
+            setMessage("Polling closure in progress .... !!!!");
             setPopup(true);
             if (cookies.MetamaskLoggedInAddress) {
                 const temp = await fundingcontractethers

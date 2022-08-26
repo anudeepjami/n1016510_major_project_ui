@@ -100,7 +100,7 @@ function FundingPage() {
                 const temp = await fundingcontractethers
                     .DepositToCrowdfundingEvent({ value: Web3.utils.toWei(depositAmount, 'ether') })
                 await temp.wait();
-                setMessage("contribution successful...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash
+                setMessage("User Contribution successful...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash
                     + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             else
@@ -118,7 +118,7 @@ function FundingPage() {
     var CreateVotingEvent = async (e) => {
         setContributeButtonStatus(true);
         try {
-            setMessage((e.target.id == "refund" ? "Refund" : "Voting") + " event creation in progress .... !!!!");
+            setMessage((e.target.id == "refund" ? "Refund" : "Disbursal") + " request creation in progress .... !!!!");
             setPopup(true);
             if (cookies.MetamaskLoggedInAddress) {
                 const temp = await fundingcontractethers
@@ -131,7 +131,7 @@ function FundingPage() {
                 await temp.wait();
                 var temp2 = await fundingcontract.methods.GetVotingEvents().call();
                 await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
-                setMessage((e.target.id == "refund" ? "Refund" : "Voting") + " event created and emails send successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                setMessage((e.target.id == "refund" ? "Refund" : "Disbursal") + " request created and emails sent to contributors successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             else
                 setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");

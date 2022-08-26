@@ -11,8 +11,8 @@ function CreateFundingEventPage() {
   const [cookies, setCookie] = useCookies();
   const [maincontractethers, setMaincontractethers] = useState(MainContractEthers());
   const [crowdfundingEvents, setCrowdfundingEvents] = useState({
-    title: "Enter Title (cannot be empty)",
-    content: "Enter some info about your funding campaign (cannot be empty)",
+    title: "Enter fundraiser title (cannot be empty)",
+    content: "Enter some info about your fundraiser (cannot be empty)",
     min_deposit: "0.1"
   });
   const [popup, setPopup] = useState(false);
@@ -34,9 +34,9 @@ function CreateFundingEventPage() {
         temp.min_deposit = event.target.value;
     }
     if (event.type === "click") {
-      if (event.currentTarget.id === "1" && temp.title === "Enter Title (cannot be empty)")
+      if (event.currentTarget.id === "1" && temp.title === "Enter fundraiser title (cannot be empty)")
         temp.title = "";
-      if (event.currentTarget.id === "2" && temp.content === "Enter some info about your funding campaign (cannot be empty)")
+      if (event.currentTarget.id === "2" && temp.content === "Enter some info about your fundraiser (cannot be empty)")
         temp.content = "";
     }
     setCrowdfundingEvents(temp);
@@ -45,7 +45,7 @@ function CreateFundingEventPage() {
   var CreateCrowdfundingEvent = async () => {
     setButtonStatus(true);
     try {
-      setMessage("Crowdfunding campaign creation in progress .... !!!!");
+      setMessage("Fundraiser creation in progress .... !!!!");
       setPopup(true);
       if (cookies.MetamaskLoggedInAddress) {
         const temp = await maincontractethers
@@ -54,7 +54,7 @@ function CreateFundingEventPage() {
             crowdfundingEvents.content,
             Web3.utils.toWei(crowdfundingEvents.min_deposit, 'ether'));
         await temp.wait();
-        setMessage(" Crowdfunding campaign created successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+        setMessage("Fundraiser created successfully ...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
       }
       else
         setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
