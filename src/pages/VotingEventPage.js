@@ -130,12 +130,16 @@ function VotingEventPage() {
                     .CompleteVotingEvent(cookies.VotingIndex);
                 await temp.wait();
                 var refund_success = await fundingcontract.methods.refund_event_success().call();
+                var temp2 = await fundingcontract.methods.GetVotingEvents().call();
                 if (refund_success) {
-                    var temp2 = await fundingcontract.methods.GetVotingEvents().call();
                     await SendRefundEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
                 }
                 var refund_msg = refund_success ? " and claim refund emails are sent to contributors" : " ";
-                setMessage("Polling closed successfully" + refund_msg + "...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                var disbursal_msg = refund_success ? " " : 
+                    temp2[cookies.VotingIndex].event_success_status 
+                        ? ", and as more than 50% of the votes aligned towards yes, this disbursal request is approved and " + Web3.utils.fromWei(temp2[cookies.VotingIndex].amount_to_send.toString(), 'ether') + " Eth is transferred to the destination wallet address '"+temp2[cookies.VotingIndex].destination_wallet_address +"' successfully."
+                            : ", and as more than 50% of the votes aligned towards no, this disbursal request is rejected and no funds are transferred from the fundraiser to the destination wallet address." ;
+                setMessage("Polling closed successfully" + (refund_msg == " " ? disbursal_msg : refund_msg) + "...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             else
                 setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
@@ -389,7 +393,7 @@ function VotingEventPage() {
                     <Modal.Body>
                         <div>
                             <b
-                                style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') || message.includes('Login') ? 'red' : 'green' }}
+                                style={{ color: message.includes('progress') ? 'blue' : message.includes('Error') || message.includes('Login') || message.includes('aligned towards no') ? 'red' : 'green' }}
                                 dangerouslySetInnerHTML={{ __html: message }}
                             >
                             </b>
