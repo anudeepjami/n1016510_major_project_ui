@@ -1,12 +1,12 @@
 // Refer references from "React JS references.pdf" in root folder of this application
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { FundingContract, FundingContractEthers } from '../components/ethereum_connectors/FundingContract.js';
+import { FundingContract, FundingContractEthers } from '../utils/ethereum_connectors/FundingContract.js';
 import { Card, ListGroup, Button, Table, Modal, Form } from 'react-bootstrap';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Rating } from 'react-simple-star-rating';
-import { SendRefundEmail } from '../components/CrowdfundingApi.js';
+import { SendRefundEmail } from '../utils/CrowdfundingApi.js';
 
 function VotingEventPage() {
 

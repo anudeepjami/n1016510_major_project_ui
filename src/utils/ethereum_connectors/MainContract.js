@@ -22,7 +22,8 @@ export function MainContract(){
 }
 
 export function MainContractEthers(){
-    return new ethers.Contract(
+    return new ethers
+    .Contract(
         contractAddress,
         crowdfundingEventsContract.interface,
         signer

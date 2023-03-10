@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Card, Button, InputGroup, Form } from 'react-bootstrap';
-import { GetWalletDetails, UpdateWalletDetails, DeleteWalletDetails } from '../components/CrowdfundingApi';
+import { GetWalletDetails, UpdateWalletDetails, DeleteWalletDetails } from '../utils/CrowdfundingApi';
 
 function User() {
 

@@ -20,7 +20,8 @@ export function FundingContract(EventAddress){
 }
 
 export function FundingContractEthers(EventAddress){
-    return new ethers.Contract(
+    return new ethers
+    .Contract(
         EventAddress,
         crowdfundingEventContract.interface,
         signer
