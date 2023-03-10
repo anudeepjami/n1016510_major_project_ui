@@ -1,6 +1,6 @@
 // Refer references from "React JS references.pdf" in root folder of this application
 import React, { useState, useEffect } from 'react';
-import { MainContract } from '../utils/ethereum_connectors/MainContract.js';
+import { MainContract } from '../components/ethereum_connectors/MainContract.js';
 import { Card } from 'react-bootstrap';
 import Web3 from 'web3';
 import { useCookies } from 'react-cookie'
