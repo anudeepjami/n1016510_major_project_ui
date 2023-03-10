@@ -1,6 +1,6 @@
 // Refer references from "React JS references.pdf" in root folder of this application   
-import web3 from "./web3";
-import signer from "./ethers";
+import web3 from "./connectors/web3";
+import signer from "./connectors/ethers";
 import { ethers } from "ethers";
 import CrowdfundingEventsContract from "../ethereum_contracts/CrowdfundingEvents.json"
 
