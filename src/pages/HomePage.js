@@ -17,7 +17,7 @@ function HomePage() {
   // Loading Crowdfunding Events to state
   const [crowdfundingEvents, setCrowdfundingEvents] = useState([]);
 
-  //this is used for loading Crowdfunding Events on page load
+  //useeffect used for loading Crowdfunding Events on page load
   useEffect(() => {
     (async () => {
       let temp = await maincontract.methods.GetCrowdfundingEvents().call();

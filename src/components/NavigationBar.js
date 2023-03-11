@@ -50,7 +50,7 @@ function NavigationBar() {
                             </Button>
                         </Link>
                         &nbsp;
-                        <Link to="/user">
+                        <Link to="/Profile">
                             <Button variant="primary">
                                 Profile
                             </Button>

@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import { Card, Button, InputGroup, Form } from 'react-bootstrap';
 import { GetWalletDetails, UpdateWalletDetails, DeleteWalletDetails } from '../utils/CrowdfundingApi';
 
-function User() {
+function Profile() {
 
     const [cookies, setCookie] = useCookies();
     const [walletDetails, setWalletDetails] = useState([]);
@@ -17,16 +17,16 @@ function User() {
         })();
     }, []);
 
-    var LoadWalletDetails = async () => {
+    const LoadWalletDetails = async () => {
         var temp = await GetWalletDetails(cookies.MetamaskLoggedInAddress);
         setWalletDetails(temp);
-        if (temp.length != 0) {
+        if (temp.length !== 0) {
             setEmailId(temp[0].email_id);
         }
     }
 
-    var UpdateDetails = async () => {
-        if (emailId.includes("@") && emailId != walletDetails[0]?.email_id) {
+    const UpdateDetails = async () => {
+        if (emailId.includes("@") && emailId !== walletDetails[0]?.email_id) {
             await UpdateWalletDetails({
                 wallet_address: cookies.MetamaskLoggedInAddress,
                 email_id: emailId
@@ -39,10 +39,10 @@ function User() {
         }
     }
 
-    var RemoveDetails = async () => {
+    const RemoveDetails = async () => {
 
         var temp = await DeleteWalletDetails(cookies.MetamaskLoggedInAddress);
-        if(temp.affectedRows == 0)
+        if(temp.affectedRows === 0)
             window.alert("No email id available in DB to delete");
         else{
             window.alert("Email id deleted successfully....!!");
@@ -84,7 +84,8 @@ function User() {
                                     onClick={RemoveDetails}
                                     disabled={cookies.MetamaskLoggedInAddress == undefined || emailId == ""? true : false}
                                     variant="danger">
-                                    Remove</Button>
+                                    Remove
+                                </Button>
                             </div>
                         </div>
                     </div>
@@ -94,4 +95,4 @@ function User() {
     )
 }
 
-export default User
+export default Profile

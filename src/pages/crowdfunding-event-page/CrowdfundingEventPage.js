@@ -11,6 +11,7 @@ import ContributorsTable from './ContributorsTable.js';
 import VotingEventsTable from './VotingEventsTable.js';
 import DiscussionForm from '../../components/DiscussionForm.js';
 import CreateVotingEventFormComponent from './CreateVotingEventFormComponent.js';
+import { Link } from 'react-router-dom';
 
 
 function FundingPage() {
@@ -60,7 +61,7 @@ function FundingPage() {
         })();
     }, []);
 
-    var LoadFundDetails = async () => {
+    const LoadFundDetails = async () => {
         setFundDetails(await fundingcontract.methods.GetCrowdfundingEventDetails().call());
         setVotingEventDetails(await fundingcontract.methods.GetVotingEvents().call());
         const temp = await fundingcontract.methods.GetCrowdfundingDiscussionForum().call();
@@ -80,7 +81,7 @@ function FundingPage() {
         setDiscussionFormList(discussionsList);
     }
 
-    var ContributeFunds = async () => {
+    const ContributeFunds = async () => {
         setCreateVotingEventButtonStatus(true);
         try {
             setModal({ ...modal, pop: true, msg: "User Contribution in progress .... !!!!" });
@@ -110,7 +111,7 @@ function FundingPage() {
         await LoadFundDetails();
     }
 
-    var CreateVotingEvent = async (e) => {
+    const CreateVotingEvent = async (e) => {
         console.log(createVotingEventDetails);
         setContributeButtonStatus(true);
         try {
@@ -124,7 +125,7 @@ function FundingPage() {
                         viewRefund ? fundDetails[6].toString() : Web3.utils.toWei(createVotingEventDetails.deposit_amount, 'ether'),
                         e.target.id === "refund" ? 1 : 0)
                 await temp.wait();
-                var temp2 = await fundingcontract.methods.GetVotingEvents().call();
+                const temp2 = await fundingcontract.methods.GetVotingEvents().call();
                 await SendEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
                 setModal({ ...modal, pop: true, msg: `${(e.target.id === "refund" ? "Refund" : "Disbursal")} request created and emails sent to contributors successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/$(temp.hash) target='_blank'> Browse Transaction Details</a><br/>Transaction Hash:  ${temp.hash}` });
             }
@@ -142,7 +143,7 @@ function FundingPage() {
         await LoadFundDetails();
     }
 
-    var SubmitComment = async (e) => {
+    const SubmitComment = async (e) => {
         e.preventDefault();
         if (comment === "" || rating === 0) {
             window.alert("comment or rating cannot be empty");
@@ -181,9 +182,10 @@ function FundingPage() {
     return (
         <>
             <div style={{ width: "60%", margin: "0 auto" }}>
-                <Button variant="link"
-                    onClick={() => window.location.href = "/"}>
-                    {'<- '}Go Back
+                <Button variant="link">
+                    <Link to="/">
+                        {'<- '}Go Back
+                    </Link>
                 </Button>
                 <h1 className="text-center" >{fundDetails[0]}</h1>
                 <h3 className="text-center" >{fundDetails[1]}</h3>

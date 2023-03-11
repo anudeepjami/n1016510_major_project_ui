@@ -5,7 +5,7 @@ import HomePage from './pages/HomePage';
 import CreateCrowdfundingEventPage from './pages/CreateCrowdfundingEventPage';
 import CrowdfundingEventPage from './pages/crowdfunding-event-page/CrowdfundingEventPage';
 import VotingEventPage from './pages/VotingEventPage';
-import User from './pages/User';
+import Profile from './pages/Profile';
 import NavigationBar from './components/NavigationBar';
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
         <Route path='/createcrowdfundingevent' element={<CreateCrowdfundingEventPage />} />
         <Route path='/crowdfundingevent' element={< CrowdfundingEventPage />} />
         <Route path='/votingevent' element={< VotingEventPage />} />
-        <Route path='/user' element={< User />} />
+        <Route path='/profile' element={< Profile />} />
       </Routes>
     </div>
   );

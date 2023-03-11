@@ -10,8 +10,8 @@ import CustomModal from '../components/CustomModal.js'
 function CreateCrowdfundingEventPage() {
 
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies();
-  const [maincontractethers, setMaincontractethers] = useState(MainContractEthers());
+  const [cookies] = useCookies();
+  const [maincontractethers] = useState(MainContractEthers());
   const [crowdfundingEvents, setCrowdfundingEvents] = useState({
     title: "",
     content: "",
