@@ -1,5 +1,6 @@
 // Refer references from "React JS references.pdf" in root folder of this application
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MainContract } from '../utils//ethereum_connectors/MainContract.js';
 import { Card } from 'react-bootstrap';
 import Web3 from 'web3';
@@ -7,27 +8,23 @@ import { useCookies } from 'react-cookie'
 
 function HomePage() {
 
-
-  const [cookies, setCookie] = useCookies();
-  const [maincontract, setMaincontract] = useState(MainContract());
+  // React router navigate hook
+  const navigate = useNavigate();
+  // React cookie hook
+  const [cookies,setCookie] = useCookies();
+  // Loading Main Contract to state
+  const [maincontract] = useState(MainContract());
+  // Loading Crowdfunding Events to state
   const [crowdfundingEvents, setCrowdfundingEvents] = useState([]);
-  //this is used for loading state components on page load
+
+  //this is used for loading Crowdfunding Events on page load
   useEffect(() => {
     (async () => {
-      const temp = await maincontract.methods.GetCrowdfundingEvents().call();
-      var temp_reverse = [];
-      for (let i = temp.length; i > 0; i--) {
-        temp_reverse.push(temp[i - 1]);
-      }
-      setCrowdfundingEvents(temp_reverse);
+      let temp = await maincontract.methods.GetCrowdfundingEvents().call();
+      setCrowdfundingEvents(temp.map((val, index, array) => array[array.length - 1 - index]));
     })();
   }, []);
 
-  var LoadFundingPage = async (item) => {
-    setCookie('FundAddress', item.crowdfunding_event_address, { path: '/' });
-    setCookie('VotingIndex', "99", { path: '/' });
-    window.location.href = "/fund";
-  }
 
   return (
     <div>
@@ -40,16 +37,32 @@ function HomePage() {
               <Card
                 className="text-center"
                 style={{ cursor: 'pointer' }}
-                onClick={() => LoadFundingPage(item)}>
-                <Card.Header className="text-muted"> <b>Fundraiser Address on the Blockchain: {item.crowdfunding_event_address}</b></Card.Header>
+                onClick={() => {
+                  setCookie('FundAddress', item.crowdfunding_event_address, { path: '/' })
+                  setCookie('VotingIndex', "99", { path: '/' })
+                  navigate("/crowdfundingevent")
+                }}>
+                <Card.Header className="text-muted"> 
+                  <b>
+                    Fundraiser Address on the Blockchain: {item.crowdfunding_event_address}
+                  </b>
+                </Card.Header>
                 <Card.Body>
-                  <Card.Title><b>{item.crowdfunding_event_title}</b></Card.Title>
+                  <Card.Title>
+                    <b>
+                      {item.crowdfunding_event_title}
+                    </b>
+                  </Card.Title>
                   <Card.Text>
                     {item.crowdfunding_event_content} <br />
                     minimum contribution required : {Web3.utils.fromWei(item.crowdfunding_event_min_deposit.toString(), 'ether') + " Eth"}
                   </Card.Text>
                 </Card.Body>
-                <Card.Footer className="text-muted"><b>Fund Manager Address: {item.crowdfunding_event_manager_address}</b></Card.Footer>
+                <Card.Footer className="text-muted">
+                  <b>
+                    Fund Manager Address: {item.crowdfunding_event_manager_address}
+                  </b>
+                </Card.Footer>
               </Card>
               <br />
             </div>

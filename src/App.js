@@ -2,8 +2,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import CreateFundingEventPage from './pages/CreateFundingEventPage';
-import FundingPage from './pages/FundingPage';
+import CreateCrowdfundingEventPage from './pages/CreateCrowdfundingEventPage';
+import CrowdfundingEventPage from './pages/crowdfunding-event-page/CrowdfundingEventPage';
 import VotingEventPage from './pages/VotingEventPage';
 import User from './pages/User';
 import NavigationBar from './components/NavigationBar';
@@ -15,13 +15,13 @@ function App() {
       <NavigationBar />
       <Routes>
         <Route path='/' element={<HomePage />} />
-        <Route path='/create' element={<CreateFundingEventPage />} />
-        <Route path='/fund' element={< FundingPage />} />
-        <Route path='/vote' element={< VotingEventPage />} />
+        <Route path='/createcrowdfundingevent' element={<CreateCrowdfundingEventPage />} />
+        <Route path='/crowdfundingevent' element={< CrowdfundingEventPage />} />
+        <Route path='/votingevent' element={< VotingEventPage />} />
         <Route path='/user' element={< User />} />
       </Routes>
     </div>
-  )
+  );
 }
 
 export default App;

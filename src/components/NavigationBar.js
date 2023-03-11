@@ -26,7 +26,13 @@ function NavigationBar() {
         else{
             console.log('Please use metamask wallet');
         }
-    }, [setCookie]);
+        return () => {
+            if (window.ethereum) {
+                window.ethereum.removeAllListeners("accountsChanged");
+                window.ethereum.removeAllListeners("chainChanged");
+            }
+        }
+    }, [cookies, setCookie]);
 
     return (
         <div>
@@ -38,16 +44,17 @@ function NavigationBar() {
                         </Link>
                     </Navbar.Brand>
                     <Nav>
-                        <Nav.Link href="/create">
+                        <Link to="/createcrowdfundingevent">
                             <Button variant="primary">
                                 Create a Fundraiser
                             </Button>
-                        </Nav.Link>
-                        <Nav.Link style={{ color: "white" }} href="/user">
+                        </Link>
+                        &nbsp;
+                        <Link to="/user">
                             <Button variant="primary">
                                 Profile
                             </Button>
-                        </Nav.Link>
+                        </Link>
                     </Nav>
                     <Nav>
                         <Navbar.Text>
