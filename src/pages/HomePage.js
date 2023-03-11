@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { MainContract } from '../utils//ethereum_connectors/MainContract.js';
 import { Card } from 'react-bootstrap';
 import Web3 from 'web3';
-import { useCookies } from 'react-cookie'
+import { Cookies } from 'react-cookie';
 
 function HomePage() {
 
   // React router navigate hook
   const navigate = useNavigate();
   // React cookie hook
-  const [cookies,setCookie] = useCookies();
+  const cookies = new Cookies();
   // Loading Main Contract to state
   const [maincontract] = useState(MainContract());
   // Loading Crowdfunding Events to state
@@ -23,7 +23,7 @@ function HomePage() {
       let temp = await maincontract.methods.GetCrowdfundingEvents().call();
       setCrowdfundingEvents(temp.map((val, index, array) => array[array.length - 1 - index]));
     })();
-  }, []);
+  }, [maincontract]);
 
 
   return (
@@ -38,8 +38,8 @@ function HomePage() {
                 className="text-center"
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
-                  setCookie('FundAddress', item.crowdfunding_event_address, { path: '/' })
-                  setCookie('VotingIndex', "99", { path: '/' })
+                  cookies.set('FundAddress', item.crowdfunding_event_address, { path: '/' });
+                  cookies.set('VotVotingIndexingIndex', "99", { path: '/' });
                   navigate("/crowdfundingevent")
                 }}>
                 <Card.Header className="text-muted"> 
