@@ -6,24 +6,20 @@ import { GetWalletDetails, UpdateWalletDetails, DeleteWalletDetails } from '../u
 
 function Profile() {
 
-    const [cookies, setCookie] = useCookies();
+    const [cookies] = useCookies();
     const [walletDetails, setWalletDetails] = useState([]);
     const [emailId, setEmailId] = useState("");
 
-    //this is used for loading state components on page load
+    //this is used for loading state on page load
     useEffect(() => {
         (async () => {
-            await LoadWalletDetails();
+            var temp = await GetWalletDetails(cookies.MetamaskLoggedInAddress);
+            setWalletDetails(temp);
+            if (temp.length !== 0) {
+                setEmailId(temp[0].email_id);
+            }
         })();
-    }, []);
-
-    const LoadWalletDetails = async () => {
-        var temp = await GetWalletDetails(cookies.MetamaskLoggedInAddress);
-        setWalletDetails(temp);
-        if (temp.length !== 0) {
-            setEmailId(temp[0].email_id);
-        }
-    }
+    }, [cookies.MetamaskLoggedInAddress]);
 
     const UpdateDetails = async () => {
         if (emailId.includes("@") && emailId !== walletDetails[0]?.email_id) {
@@ -32,7 +28,6 @@ function Profile() {
                 email_id: emailId
             });
             window.alert("email id updated successfully");
-            window.location.reload(true);
         }
         else {
             window.alert("email in incorrect format or you are trying to update same email id");
@@ -61,28 +56,28 @@ function Profile() {
                         <InputGroup className="mb-3">
                             <InputGroup.Text>Ethereum Wallet Address :</InputGroup.Text>
                             <Form.Control
-                                placeholder={cookies.MetamaskLoggedInAddress == undefined ? "Connect to Metamask" : cookies.MetamaskLoggedInAddress}
+                                placeholder={!cookies.MetamaskLoggedInAddress ? "Connect to Metamask" : cookies.MetamaskLoggedInAddress}
                                 disabled={true}
                             />
                         </InputGroup>
                         <InputGroup className="mb-3">
                             <InputGroup.Text>User Email ID :</InputGroup.Text>
                             <Form.Control
-                                placeholder={cookies.MetamaskLoggedInAddress == undefined ? "Connect with Metamask to edit your email address" : walletDetails.length != 0 ? walletDetails[0]?.email_id : "Enter Your Email ID"}
-                                disabled={cookies.MetamaskLoggedInAddress == undefined ? true : false}
+                                placeholder={!cookies.MetamaskLoggedInAddress ? "Connect with Metamask to edit your email address" : walletDetails.length !== 0 ? walletDetails[0]?.email_id : "Enter Your Email ID"}
+                                disabled={!cookies.MetamaskLoggedInAddress ? true : false}
                                 onChange={(e) => { setEmailId(e.target.value) }}
                             />
                         </InputGroup>
                         <div className="text-center">
                             <Button
                                 onClick={UpdateDetails}
-                                disabled={cookies.MetamaskLoggedInAddress == undefined ? true : false}
+                                disabled={!cookies.MetamaskLoggedInAddress ? true : false}
                                 variant="primary">
                                 Save</Button>
                             <div className='d-flex justify-content-end'>
                                 <Button
                                     onClick={RemoveDetails}
-                                    disabled={cookies.MetamaskLoggedInAddress == undefined || emailId == ""? true : false}
+                                    disabled={!cookies.MetamaskLoggedInAddress || !emailId ? true : false}
                                     variant="danger">
                                     Remove
                                 </Button>
