@@ -1,24 +1,29 @@
 // Refer references from "React JS references.pdf" in root folder of this application
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { FundingContract, FundingContractEthers } from '../utils//ethereum_connectors/FundingContract.js';
+import { FundingContract, FundingContractEthers } from '../../utils/ethereum_connectors/FundingContract.js';
 import { Card, ListGroup, Button, Table, Modal, Form } from 'react-bootstrap';
 import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Rating } from 'react-simple-star-rating';
-import { SendRefundEmail } from '../utils//CrowdfundingApi.js';
+import { SendRefundEmail } from '../../utils/CrowdfundingApi.js';
+import { useNavigate, Link } from 'react-router-dom';
+import GoBackButton from '../../components/GoBackButton.js';
 
 function VotingEventPage() {
 
     const [cookies, setCookie] = useCookies();
-    if (window.location.search != "") {
+    const navigate = useNavigate();
+    
+    if (window.location.search !== "") {
         var params = new URLSearchParams(window.location.search)
         setCookie('FundAddress', params.get('FundAddress'), { path: '/' });
         setCookie('VotingIndex', params.get('VotingIndex'), { path: '/' });
-        window.location.href = "/vote";
+        navigate("/vote");
     }
-    const [fundingcontract, setfundingcontract] = useState(FundingContract(cookies.FundAddress));
-    const [fundingcontractethers, setfundingcontractethers] = useState(FundingContractEthers(cookies.FundAddress));
+
+    const [fundingcontract] = useState(FundingContract(cookies.FundAddress));
+    const [fundingcontractethers] = useState(FundingContractEthers(cookies.FundAddress));
 
     const [fundDetails, setFundDetails] = useState({});
     const [votingEventDetails, setVotingEventDetails] = useState({});
@@ -47,14 +52,14 @@ function VotingEventPage() {
         })();
     }, []);
 
-    var LoadVotingDetails = async () => {
+    const LoadVotingDetails = async () => {
         setClaimRefundButton(await fundingcontract.methods.refund_event_success().call());
         const temp = await fundingcontract.methods.GetCrowdfundingEventDetails().call();
         setFundDetails(temp);
         const temp1 = await fundingcontract.methods.GetVotingEvents().call();
         setVotingEventDetails(temp1[cookies.VotingIndex]);
-        var tempTable = [];
-        var tempVoteDivision = {
+        let tempTable = [];
+        let tempVoteDivision = {
             approved: temp1[cookies.VotingIndex].yes_votes,
             refused: temp1[cookies.VotingIndex].no_votes,
             yettovote: parseInt(temp[5]) - parseInt(temp1[cookies.VotingIndex].yes_votes) - parseInt(temp1[cookies.VotingIndex].no_votes),
@@ -62,7 +67,7 @@ function VotingEventPage() {
         };
         temp[4].forEach((element, index) => {
             temp1[cookies.VotingIndex].polling_data.forEach((element2) => {
-                if (element.contributor_address == element2.contributor_address) {
+                if (element.contributor_address === element2.contributor_address) {
                     tempTable.push({
                         contributor_address: element.contributor_address,
                         contributor_vote_status: element2.contributor_vote_status,
@@ -70,7 +75,7 @@ function VotingEventPage() {
                     });
                 }
             })
-            if (tempTable[index] == undefined) {
+            if (tempTable[index] === undefined) {
                 tempTable.push({
                     contributor_address: element.contributor_address,
                     contributor_votes: element.contributor_votes
@@ -78,10 +83,10 @@ function VotingEventPage() {
             }
         });
         const temp2 = await fundingcontract.methods.GetCrowdfundingDiscussionForum().call();
-        var discussionsList = [];
-        var total_rating = 0;
+        let discussionsList = [];
+        let total_rating = 0;
         temp2.forEach((item) => {
-            if (item.index == cookies.VotingIndex) {
+            if (item.index === cookies.VotingIndex) {
                 total_rating = total_rating + parseInt(item.rating)
                 discussionsList.push({
                     comment: item.comment,
@@ -97,7 +102,7 @@ function VotingEventPage() {
 
     }
 
-    var Vote = async (vote) => {
+    const Vote = async (vote) => {
         setVotingButton(true);
         try {
             setMessage("Voting in progress .... !!!!");
@@ -120,7 +125,7 @@ function VotingEventPage() {
         await LoadVotingDetails();
     }
 
-    var ClosePolling = async () => {
+    const ClosePolling = async () => {
         setPollingButton(true);
         try {
             setMessage("Polling closure in progress .... !!!!");
@@ -139,7 +144,7 @@ function VotingEventPage() {
                     temp2[cookies.VotingIndex].event_success_status 
                         ? ", and as more than 50% of the votes aligned towards yes, this disbursal request is approved and " + Web3.utils.fromWei(temp2[cookies.VotingIndex].amount_to_send.toString(), 'ether') + " Eth is transferred to the destination wallet address '"+temp2[cookies.VotingIndex].destination_wallet_address +"' successfully."
                             : ", and as more than 50% of the votes aligned towards no, this disbursal request is rejected and no funds are transferred from the fundraiser to the destination wallet address." ;
-                setMessage("Polling closed successfully" + (refund_msg == " " ? disbursal_msg : refund_msg) + "...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                setMessage("Polling closed successfully" + (refund_msg === " " ? disbursal_msg : refund_msg) + "...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
             }
             else
                 setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
@@ -153,9 +158,9 @@ function VotingEventPage() {
         await LoadVotingDetails();
     }
 
-    var SubmitComment = async (e) => {
+    const SubmitComment = async (e) => {
         e.preventDefault();
-        if (comment == "" || rating == 0) {
+        if (comment === "" || rating === 0) {
             window.alert("comment or rating cannot be empty");
         }
         else {
@@ -187,7 +192,7 @@ function VotingEventPage() {
         }
     }
 
-    var ClaimRefund = async (e) => {
+    const ClaimRefund = async (e) => {
         try {
             setMessage("Refund in progress .... !!!!");
             setPopup(true);
@@ -211,10 +216,7 @@ function VotingEventPage() {
     return (
         <>
             <div style={{ width: "60%", margin: "0 auto" }}>
-                <Button variant="link"
-                    onClick={() => window.location.href = "/fund"}>
-                    {'<- '}Go Back
-                </Button>
+                <GoBackButton link="/crowdfundingevent"/>
                 <h1 className="text-center" >{votingEventDetails?.title}</h1>
                 <h3 className="text-center" >{votingEventDetails?.body}</h3>
                 <Card>
@@ -222,7 +224,7 @@ function VotingEventPage() {
                     <ListGroup variant="flush">
                         <ListGroup.Item><b>Fund Address</b>: {cookies.FundAddress}</ListGroup.Item>
                         <ListGroup.Item><b>Manager Address</b>: {fundDetails[2]}</ListGroup.Item>
-                        <ListGroup.Item><b>Fund Balance</b>: {Web3.utils.fromWei(fundDetails[6] == undefined ? '0' : fundDetails[6].toString(), 'ether') + " Eth"}</ListGroup.Item>
+                        <ListGroup.Item><b>Fund Balance</b>: {Web3.utils.fromWei(fundDetails[6] === undefined ? '0' : fundDetails[6].toString(), 'ether') + " Eth"}</ListGroup.Item>
                         <ListGroup.Item><b>Contributors Info</b>: {fundDetails[4]?.length + ' contributors have ' + fundDetails[5] + ' votes.'}</ListGroup.Item>
                     </ListGroup>
                 </Card>
@@ -256,7 +258,7 @@ function VotingEventPage() {
                     </Card.Header>
                     <ListGroup variant="flush">
                         <ListGroup.Item><b>Destination Wallet Address</b>: {votingEventDetails.refund_event ? <span style={{ color: 'red' }}><b>Refund All Contributors</b></span> : votingEventDetails.destination_wallet_address}</ListGroup.Item>
-                        <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send == undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " Eth"}{votingEventDetails.refund_event ? " divided proportionally accross the contributors" : ""}</ListGroup.Item>
+                        <ListGroup.Item><b>Amount Being Sent</b>: {Web3.utils.fromWei(votingEventDetails.amount_to_send === undefined ? '0' : votingEventDetails.amount_to_send.toString(), 'ether') + " Eth"}{votingEventDetails.refund_event ? " divided proportionally accross the contributors" : ""}</ListGroup.Item>
                         <ListGroup.Item><b>Request Status</b>:&nbsp;
                             <ins style={{ color: !votingEventDetails.event_completion_status ? 'blue' : votingEventDetails.event_success_status ? 'green' : 'red' }}>
                                 {!votingEventDetails.event_completion_status ? 'In Progress' : votingEventDetails.event_success_status ? 'Successful' : "Failed"}
@@ -297,8 +299,8 @@ function VotingEventPage() {
                                                     <td>{item.contributor_address}</td>
                                                     <td>{Web3.utils.fromWei((item.contributor_votes * fundDetails[3]).toString(), 'ether') + " Eth"}</td>
                                                     <td>{item.contributor_votes}</td>
-                                                    <td style={{ color: item.contributor_vote_status == undefined ? 'white' : item.contributor_vote_status ? 'green' : 'red' }}>
-                                                        {item.contributor_vote_status == undefined ? "Yet to Vote" : item.contributor_vote_status ? "Approved" : "Refused"}
+                                                    <td style={{ color: item.contributor_vote_status === undefined ? 'white' : item.contributor_vote_status ? 'green' : 'red' }}>
+                                                        {item.contributor_vote_status === undefined ? "Yet to Vote" : item.contributor_vote_status ? "Approved" : "Refused"}
                                                     </td>
                                                 </tr>
                                             )
@@ -410,7 +412,8 @@ function VotingEventPage() {
                                         {({ remainingTime }) => remainingTime}
                                     </CountdownCircleTimer>
                                 </div>
-                                : <></>}
+                                : 
+                        <></>}
                     </Modal.Body>
                 </Modal>
             </div>

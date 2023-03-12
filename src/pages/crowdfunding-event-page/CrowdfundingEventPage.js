@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { FundingContract, FundingContractEthers } from '../../utils/ethereum_connectors/FundingContract.js';
-import { Card, Button, Form, InputGroup } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import Web3 from 'web3';
 import { SendEmail } from '../../utils/CrowdfundingApi.js';
 import CustomModal from '../../components/CustomModal.js';
@@ -12,9 +12,10 @@ import VotingEventsTable from './VotingEventsTable.js';
 import DiscussionForm from '../../components/DiscussionForm.js';
 import CreateVotingEventFormComponent from './CreateVotingEventFormComponent.js';
 import { Link } from 'react-router-dom';
+import GoBackButton from '../../components/GoBackButton.js';
 
 
-function FundingPage() {
+function CrowdfundingEventPage() {
 
     //react cookie custom react hook
     const [cookies, setCookie] = useCookies();
@@ -29,8 +30,12 @@ function FundingPage() {
     const [votingEventDetails, setVotingEventDetails] = useState([]);
     const [discussionFormList, setDiscussionFormList] = useState([]);
 
-    const [viewContributorsTable, setViewContributorsTable] = useState(false);
-    const [viewVotingEventsTable, setViewVotingEventsTable] = useState(false);
+
+    const [viewTable, setViewTable] = useState({
+        viewContributorsTable: false,
+        viewVotingEventsTable: false
+    });
+
     const [viewCreateVotingEventForm, setViewCreateVotingEventForm] = useState(false);
     const [viewRefund, setViewRefund] = useState(false);
 
@@ -56,10 +61,10 @@ function FundingPage() {
             await LoadFundDetails();
             if (cookies.VotingIndex !== "99") {
                 setCookie('VotingIndex', "99", { path: '/' });
-                window.location.href = "/fund";
             }
+            console.log(`crowdfunding event page rendered`)
         })();
-    }, []);
+    }, [cookies.VotingIndex]);
 
     const LoadFundDetails = async () => {
         setFundDetails(await fundingcontract.methods.GetCrowdfundingEventDetails().call());
@@ -182,11 +187,7 @@ function FundingPage() {
     return (
         <>
             <div style={{ width: "60%", margin: "0 auto" }}>
-                <Button variant="link">
-                    <Link to="/">
-                        {'<- '}Go Back
-                    </Link>
-                </Button>
+                <GoBackButton link="/"/>
                 <h1 className="text-center" >{fundDetails[0]}</h1>
                 <h3 className="text-center" >{fundDetails[1]}</h3>
                 <h5 className='d-flex justify-content-between'>
@@ -199,7 +200,7 @@ function FundingPage() {
                             type="submit"
                             disabled={window.location.href.includes('localhost')}
                             onClick={() => {
-                                window.open('https://rinkeby.etherscan.io/address/' + cookies.FundAddress, '_blank', 'noopener,noreferrer');
+                                window.open(`https://rinkeby.etherscan.io/address/${cookies.FundAddress}`, '_blank', 'noopener,noreferrer');
                             }}>
                             History
                         </Button>
@@ -248,10 +249,9 @@ function FundingPage() {
                                     variant="info"
                                     type="submit"
                                     onClick={() => {
-                                        setViewContributorsTable(!viewContributorsTable)
-                                        setViewVotingEventsTable(false)
+                                        setViewTable({...viewTable, viewContributorsTable: !viewTable.viewContributorsTable, viewVotingEventsTable: false})
                                     }}>
-                                    {!viewContributorsTable ? 'View' : 'Hide'} Contributors</Button>
+                                    {!viewTable.viewContributorsTable ? 'View' : 'Hide'} Contributors</Button>
                                 <br /><br />
                             </Card.Text>
                         </Card.Body>
@@ -290,10 +290,9 @@ function FundingPage() {
                                     variant="info"
                                     type="submit"
                                     onClick={() => {
-                                        setViewVotingEventsTable(!viewVotingEventsTable)
-                                        setViewContributorsTable(false)
+                                        setViewTable({...viewTable, viewContributorsTable: false, viewVotingEventsTable: !viewTable.viewVotingEventsTable})
                                     }}>
-                                    {!viewVotingEventsTable ? 'View' : 'Hide'} Disbursal/Refund Requests
+                                    {!viewTable.viewVotingEventsTable ? 'View' : 'Hide'} Disbursal/Refund Requests
                                 </Button>
 
                                 <br /><br />
@@ -305,7 +304,7 @@ function FundingPage() {
                 {/* All Tables */}
                 <div>
                     {/* Contributors table component*/}
-                    {viewContributorsTable &&
+                    {viewTable.viewContributorsTable &&
                         <ContributorsTable
                             fundDetails={fundDetails}
                         />
@@ -314,7 +313,7 @@ function FundingPage() {
                 </div>
                 <div>
                     {/* Voting events table compnonent*/}
-                    {viewVotingEventsTable &&
+                    {viewTable.viewVotingEventsTable &&
                         <VotingEventsTable
                             votingEventDetails={votingEventDetails}
                         />}
@@ -347,4 +346,4 @@ function FundingPage() {
     )
 }
 
-export default FundingPage
+export default CrowdfundingEventPage

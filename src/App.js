@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import CreateCrowdfundingEventPage from './pages/CreateCrowdfundingEventPage';
 import CrowdfundingEventPage from './pages/crowdfunding-event-page/CrowdfundingEventPage';
-import VotingEventPage from './pages/VotingEventPage';
+import VotingEventPage from './pages/voting-event-page/VotingEventPage';
 import Profile from './pages/Profile';
 import NavigationBar from './components/NavigationBar';
 

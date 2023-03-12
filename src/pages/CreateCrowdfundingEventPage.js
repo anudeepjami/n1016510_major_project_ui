@@ -1,7 +1,7 @@
 // Refer references from "React JS references.pdf" in root folder of this application
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Form, Button, Modal } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { MainContractEthers } from '../utils/ethereum_connectors/MainContract.js';
 import Web3 from 'web3';
 import { useCookies } from 'react-cookie';
@@ -9,6 +9,7 @@ import CustomModal from '../components/CustomModal.js'
 
 function CreateCrowdfundingEventPage() {
 
+  // 
   const navigate = useNavigate();
   const [cookies] = useCookies();
   const [maincontractethers] = useState(MainContractEthers());
@@ -62,7 +63,7 @@ function CreateCrowdfundingEventPage() {
               id='1' 
               type="text" 
               placeholder='Enter fundraiser title (cannot be empty)'
-              onChange={(e)=>{ setCrowdfundingEvents({...crowdfundingEvents, title: e.target.value })}} />
+              onChange={(e)=>{ setCrowdfundingEvents({ ...crowdfundingEvents, title: e.target.value })}} />
           </Form.Group>
           <Form.Group className="mb-4">
             <Form.Label>Info :</Form.Label>
@@ -70,7 +71,7 @@ function CreateCrowdfundingEventPage() {
               id='2' 
               type="text" 
               placeholder='Enter some info about your fundraiser (cannot be empty)'
-              onChange={(e)=>{ setCrowdfundingEvents({...crowdfundingEvents, content: e.target.value })}} />
+              onChange={(e)=>{ setCrowdfundingEvents({ ...crowdfundingEvents, content: e.target.value })}} />
           </Form.Group>
           <Form.Group className="mb-4">
             <Form.Label>Minimum contribution of Ether required to become a contributor of the fundraiser : (Enter value in Ether)</Form.Label>
