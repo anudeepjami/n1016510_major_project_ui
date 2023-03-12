@@ -13,7 +13,7 @@ function Profile() {
     //this is used for loading state on page load
     useEffect(() => {
         (async () => {
-            var temp = await GetWalletDetails(cookies.MetamaskLoggedInAddress);
+            const temp = await GetWalletDetails(cookies.MetamaskLoggedInAddress);
             setWalletDetails(temp);
             if (temp.length !== 0) {
                 setEmailId(temp[0].email_id);
@@ -36,7 +36,7 @@ function Profile() {
 
     const RemoveDetails = async () => {
 
-        var temp = await DeleteWalletDetails(cookies.MetamaskLoggedInAddress);
+        const temp = await DeleteWalletDetails(cookies.MetamaskLoggedInAddress);
         if(temp.affectedRows === 0)
             window.alert("No email id available in DB to delete");
         else{
