@@ -1,7 +1,7 @@
 // Refer references from "React JS references.pdf" in root folder of this application
 import { ethers } from "ethers";
 
-var provider,signer;
+let provider,signer;
  
 //checks if browser has metmask or anyother wallet configured
 if (typeof window.ethereum != "undefined") {

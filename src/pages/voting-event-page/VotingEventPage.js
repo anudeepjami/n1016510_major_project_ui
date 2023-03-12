@@ -16,7 +16,7 @@ function VotingEventPage() {
     const navigate = useNavigate();
     
     if (window.location.search !== "") {
-        var params = new URLSearchParams(window.location.search)
+        const params = new URLSearchParams(window.location.search)
         setCookie('FundAddress', params.get('FundAddress'), { path: '/' });
         setCookie('VotingIndex', params.get('VotingIndex'), { path: '/' });
         navigate("/vote");
@@ -134,13 +134,13 @@ function VotingEventPage() {
                 const temp = await fundingcontractethers
                     .CompleteVotingEvent(cookies.VotingIndex);
                 await temp.wait();
-                var refund_success = await fundingcontract.methods.refund_event_success().call();
-                var temp2 = await fundingcontract.methods.GetVotingEvents().call();
+                const refund_success = await fundingcontract.methods.refund_event_success().call();
+                const temp2 = await fundingcontract.methods.GetVotingEvents().call();
                 if (refund_success) {
                     await SendRefundEmail(fundDetails, temp2[temp2.length - 1], cookies.FundAddress, temp2.length - 1);
                 }
-                var refund_msg = refund_success ? " and claim refund emails are sent to contributors" : " ";
-                var disbursal_msg = refund_success ? " " : 
+                const refund_msg = refund_success ? " and claim refund emails are sent to contributors" : " ";
+                const disbursal_msg = refund_success ? " " : 
                     temp2[cookies.VotingIndex].event_success_status 
                         ? ", and as more than 50% of the votes aligned towards yes, this disbursal request is approved and " + Web3.utils.fromWei(temp2[cookies.VotingIndex].amount_to_send.toString(), 'ether') + " Eth is transferred to the destination wallet address '"+temp2[cookies.VotingIndex].destination_wallet_address +"' successfully."
                             : ", and as more than 50% of the votes aligned towards no, this disbursal request is rejected and no funds are transferred from the fundraiser to the destination wallet address." ;

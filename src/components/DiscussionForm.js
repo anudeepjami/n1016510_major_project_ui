@@ -65,7 +65,10 @@ function DiscussionForm( {discussionFormList, commentDetails, setCommentDetails,
                     </Button>
                     <Rating
                         ratingValue={commentDetails.rating}
-                        onClick={(e) => { setCommentDetails({...commentDetails, rating: e.target.value }) }}
+                        onClick={(e) => { 
+                            console.log(commentDetails);
+                            setCommentDetails({...commentDetails, rating: e }) 
+                        }}
                     >
                     </Rating>
                     <span> {'<<--'} Please give your star rating here</span>

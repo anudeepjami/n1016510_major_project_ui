@@ -25,7 +25,7 @@ function CreateCrowdfundingEventPage() {
   const [buttonStatus, setButtonStatus] = useState(false);
 
 
-  var CreateCrowdfundingEvent = async () => {
+  const CreateCrowdfundingEvent = async () => {
     setButtonStatus(true);
     try {
       setModal({ ...modal, pop: true, msg: `Fundraiser creation in progress .... !!!!` });

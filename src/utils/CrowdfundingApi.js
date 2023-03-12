@@ -5,7 +5,7 @@ const baseURL = window.location.href.includes("localhost") ? "http://localhost:8
 
 export async function GetWalletDetails(wallet_address) {
     try {
-        var response = await axios
+        const response = await axios
             .request({
                 baseURL: baseURL,
                 method: 'PUT',
@@ -23,7 +23,7 @@ export async function GetWalletDetails(wallet_address) {
 
 export async function UpdateWalletDetails(wallet_details) {
     try {
-        var response = await axios
+        const response = await axios
             .request({
                 baseURL: baseURL,
                 method: 'POST',
@@ -42,7 +42,7 @@ export async function UpdateWalletDetails(wallet_details) {
 
 export async function DeleteWalletDetails(wallet_address) {
     try {
-        var response = await axios
+        const response = await axios
             .request({
                 baseURL: baseURL,
                 method: 'DELETE',
@@ -60,7 +60,7 @@ export async function DeleteWalletDetails(wallet_address) {
 
 export async function SendEmail(fundDetails, votingEventDetails, fundAddress, votingIndex) {
     try {
-        var response = await axios
+        const response = await axios
             .request({
                 baseURL: baseURL,
                 method: 'POST',
@@ -81,7 +81,7 @@ export async function SendEmail(fundDetails, votingEventDetails, fundAddress, vo
 
 export async function SendRefundEmail(fundDetails, votingEventDetails, fundAddress, votingIndex) {
     try {
-        var response = await axios
+        const response = await axios
             .request({
                 baseURL: baseURL,
                 method: 'POST',

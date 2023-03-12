@@ -10,7 +10,7 @@ const crowdfundingEventsContract = {
     bytecode: CrowdfundingEventsContract.contracts['CrowdfundingEvents.sol']['CrowdfundingEvents'].evm.bytecode.object
 };
 
-var contractAddress = window.location.href.includes("localhost") ? ContractAddresses.ganache : ContractAddresses.rinkeby;
+const contractAddress = window.location.href.includes("localhost") ? ContractAddresses.ganache : ContractAddresses.rinkeby;
 
 export function MainContract(){
     return new web3.eth
