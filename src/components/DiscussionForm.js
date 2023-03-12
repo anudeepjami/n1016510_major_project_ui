@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { Rating } from 'react-simple-star-rating';
 
-function DiscussionForm( {discussionFormList, commentButtonStatus, rating, setRating, setComment, SubmitComment} ) {
+function DiscussionForm( {discussionFormList, commentDetails, setCommentDetails, SubmitComment} ) {
     return (
         <Card>
             <Card.Header>
@@ -52,20 +52,20 @@ function DiscussionForm( {discussionFormList, commentButtonStatus, rating, setRa
                         as="textarea"
                         rows={3}
                         placeholder="Enter your comments..!!"
-                        onChange={(e) => { setComment(e.target.value) }}
+                        onChange={(e) => { setCommentDetails({...commentDetails, comment: e.target.value })}}
                     />
                     <br />
                     <Button
                         variant="primary"
                         type="submit"
-                        disabled={commentButtonStatus}
+                        disabled={commentDetails.commentButtonStatus}
                         onClick={SubmitComment}
                     >
                         Comment
                     </Button>
                     <Rating
-                        ratingValue={rating}
-                        onClick={(e) => { setRating(e) }}
+                        ratingValue={commentDetails.rating}
+                        onClick={(e) => { setCommentDetails({...commentDetails, rating: e.target.value }) }}
                     >
                     </Rating>
                     <span> {'<<--'} Please give your star rating here</span>

@@ -7,7 +7,7 @@ import Web3 from 'web3';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { Rating } from 'react-simple-star-rating';
 import { SendRefundEmail } from '../../utils/CrowdfundingApi.js';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import GoBackButton from '../../components/GoBackButton.js';
 
 function VotingEventPage() {
@@ -111,14 +111,14 @@ function VotingEventPage() {
                 const temp = await fundingcontractethers
                     .VoteForVotingEvent(cookies.VotingIndex, vote);
                 await temp.wait();
-                setMessage("Vote recorded successfully...... !!!!" + " <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/" + temp.hash + "' target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: " + temp.hash);
+                setMessage(`Vote recorded successfully...... !!!!  <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/${temp.hash} target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: ${temp.hash}`);
             }
             else
                 setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
         }
         catch (error) {
-            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
-                error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+            error.reason !== undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                error?.data?.message !== undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                     : setMessage("Error : " + error.message);
         }
         setVotingButton(false);
@@ -150,8 +150,8 @@ function VotingEventPage() {
                 setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
         }
         catch (error) {
-            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
-                error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+            error.reason !== undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                error?.data?.message !== undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                     : setMessage("Error : " + error.message);
         }
         setPollingButton(false);
@@ -181,8 +181,8 @@ function VotingEventPage() {
                     setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
             }
             catch (error) {
-                error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
-                    error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+                error.reason !== undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                    error?.data?.message !== undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                         : setMessage("Error : " + error.message);
             }
             setCommentButton(false);
@@ -205,8 +205,8 @@ function VotingEventPage() {
                 setMessage("Install/Login to Metamask browser extension to perform transactions on AJ Hybrid DAO Crowdfunding platform ... !!!");
         }
         catch (error) {
-            error.reason != undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
-                error?.data?.message != undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
+            error.reason !== undefined ? setMessage("Error : " + error.reason.split("execution reverted:")[1]) :
+                error?.data?.message !== undefined ? setMessage("Error : " + error.data.message.split("VM Exception while processing transaction: revert")[1])
                     : setMessage("Error : " + error.message);
         }
         await LoadVotingDetails();

@@ -11,7 +11,6 @@ import ContributorsTable from './ContributorsTable.js';
 import VotingEventsTable from './VotingEventsTable.js';
 import DiscussionForm from '../../components/DiscussionForm.js';
 import CreateVotingEventFormComponent from './CreateVotingEventFormComponent.js';
-import { Link } from 'react-router-dom';
 import GoBackButton from '../../components/GoBackButton.js';
 
 
@@ -51,9 +50,11 @@ function CrowdfundingEventPage() {
         deposit_amount: ""
     });
 
-    const [comment, setComment] = useState("");
-    const [rating, setRating] = useState(0);
-    const [commentButtonStatus, setCommentButtonStatus] = useState(false);
+    const [commentDetails, setCommentDetails] = useState({
+        comment: "",
+        rating: 0,
+        commentButtonStatus: false
+    });
 
     //this is used for loading state components on page load
     useEffect(() => {
@@ -150,19 +151,19 @@ function CrowdfundingEventPage() {
 
     const SubmitComment = async (e) => {
         e.preventDefault();
-        if (comment === "" || rating === 0) {
+        if (commentDetails.comment === "" || commentDetails.rating === 0) {
             window.alert("comment or rating cannot be empty");
         }
         else {
-            setCommentButtonStatus(true);
+            setCommentDetails({...commentDetails, commentButtonStatus: true})
             try {
                 setModal({ ...modal, pop: true, msg: `Comment posting in progress .... !!!!` });
                 if (cookies.MetamaskLoggedInAddress) {
                     const temp = await fundingcontractethers
                         .CrowdfundingDiscussionForum(
                             cookies.VotingIndex,
-                            comment,
-                            rating)
+                            commentDetails.comment,
+                            commentDetails.rating)
                     await temp.wait();
                     setModal({ ...modal, pop: true, msg: `Comment posted successfully...... !!!! <br/> <br/> <a href='https://rinkeby.etherscan.io/tx/${temp.hash} target='_blank'> Browse Transaction Details</a><br/>Transaction Hash: ${temp.hash}` });
                 }
@@ -176,10 +177,12 @@ function CrowdfundingEventPage() {
                         setModal({ ...modal, pop: true, msg: `Error : ${error.data.message.split("VM Exception while processing transaction: revert")[1]}` }) :
                         setModal({ ...modal, pop: true, msg: `Error : ${error.message}` });
             }
-            setCommentButtonStatus(false);
+            setCommentDetails({
+                comment: "",
+                rating: 0,
+                commentButtonStatus: false
+            });
             await LoadFundDetails();
-            setComment("");
-            setRating(0);
         }
     }
 
@@ -326,10 +329,8 @@ function CrowdfundingEventPage() {
                     {/* Discussion Form */}
                     <DiscussionForm
                         discussionFormList={discussionFormList}
-                        commentButtonStatus={commentButtonStatus}
-                        rating={rating}
-                        setRating={setRating}
-                        setComment={setComment}
+                        commentDetails = {commentDetails}
+                        setCommentDetails={setCommentDetails}
                         SubmitComment={SubmitComment}
                     />
                     {/* Discussion Form */}
