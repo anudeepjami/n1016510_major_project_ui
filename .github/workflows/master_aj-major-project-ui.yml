@@ -40,18 +40,63 @@ jobs:
           name: n1016510-MajorProject-UI
           path: build/ui.zip
 
-  deploy:
+  deploy_test:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+      name: Test
+      url: ${{ steps.deploy.outputs.url }}
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: n1016510-MajorProject-UI
+
+      - name: Deploy to Test
+        id: deploy
+        run: echo "deploying to Test" && echo "url=https://test.example.com" >> "$GITHUB_OUTPUT"
+
+  deploy_qa:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: QA
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: n1016510-MajorProject-UI
+
+      - name: Deploy to QA
+        id: deploy
+        run: echo "deploying to QA" && echo "url=https://qa.example.com" >> "$GITHUB_OUTPUT"
+
+  deploy_prod:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: Production
+      url: ${{ steps.deploy.outputs.url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: n1016510-MajorProject-UI
+
+      - name: Deploy to Production
+        id: deploy
+        run: echo "deploying to Production" && echo "url=https://prod.example.com" >> "$GITHUB_OUTPUT"
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   environment:
+  #     name: 'Production'
+  #     url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+  #   steps:
+  #     - name: Download artifact from build job
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: n1016510-MajorProject-UI
 
       # - name: 'Deploy to Azure Web App'
       #   id: deploy-to-webapp
@@ -66,5 +111,6 @@ jobs:
       #   uses: joutvhu/delete-artifact@v1.0.1
       #   with:
       #     name: n1016510-MajorProject-UI
+
 
 
