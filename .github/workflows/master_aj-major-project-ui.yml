@@ -35,7 +35,7 @@ jobs:
           filename: 'ui.zip'
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: n1016510-MajorProject-UI
           path: build/ui.zip
@@ -66,3 +66,4 @@ jobs:
         uses: joutvhu/delete-artifact@v1.0.1
         with:
           name: n1016510-MajorProject-UI
+
