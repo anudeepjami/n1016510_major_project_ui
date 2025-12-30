@@ -35,7 +35,7 @@ jobs:
           filename: 'ui.zip'
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: n1016510-MajorProject-UI
           path: build/ui.zip
@@ -49,21 +49,22 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: n1016510-MajorProject-UI
 
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'aj-major-project-ui'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D1880A75CCAA416DA837F5DDFA1DEF10 }}
-          package: ui.zip
+      # - name: 'Deploy to Azure Web App'
+      #   id: deploy-to-webapp
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: 'aj-major-project-ui'
+      #     slot-name: 'Production'
+      #     publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D1880A75CCAA416DA837F5DDFA1DEF10 }}
+      #     package: ui.zip
       
-      - name: Delete Build Artifact
-        uses: joutvhu/delete-artifact@v1.0.1
-        with:
-          name: n1016510-MajorProject-UI
+      # - name: Delete Build Artifact
+      #   uses: joutvhu/delete-artifact@v1.0.1
+      #   with:
+      #     name: n1016510-MajorProject-UI
+
 
