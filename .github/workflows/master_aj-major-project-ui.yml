@@ -74,7 +74,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [deploy_test, deploy_qa]
     # allow: success OR skipped for either job
-    if: always()
+    if: |
+      always() && (
+        needs.deploy_test.result == 'success' ||
+        needs.deploy_test.result == 'skipped' ||
+        needs.deploy_qa.result == 'success' ||
+        needs.deploy_qa.result == 'skipped'
+      )
     environment:
       name: Production
       url: ${{ steps.deploy.outputs.url }}
@@ -113,6 +119,7 @@ jobs:
       #   uses: joutvhu/delete-artifact@v1.0.1
       #   with:
       #     name: n1016510-MajorProject-UI
+
 
 
 
